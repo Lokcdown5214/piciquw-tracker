@@ -532,10 +532,10 @@
         // =========================================
 
         const COUNTRIES = [
-            { code: 'KR', name: 'Batch KR', fullName: 'Korea', flag: '🇰🇷' },
-            { code: 'CH', name: 'Batch CH', fullName: 'China', flag: '🇨🇳' },
-            { code: 'JP', name: 'Batch JP', fullName: 'Jepang', flag: '🇯🇵' },
-            { code: 'THAI', name: 'Batch THAI', fullName: 'Thailand', flag: '🇹🇭' }
+            { code: 'KR', name: 'Batch KR', fullName: 'Korea', flag: '<img src="https://flagcdn.com/w40/kr.png" alt="KR" class="w-7 h-5 object-cover rounded shadow-sm inline-block">' },
+            { code: 'CH', name: 'Batch CH', fullName: 'China', flag: '<img src="https://flagcdn.com/w40/cn.png" alt="CN" class="w-7 h-5 object-cover rounded shadow-sm inline-block">' },
+            { code: 'JP', name: 'Batch JP', fullName: 'Jepang', flag: '<img src="https://flagcdn.com/w40/jp.png" alt="JP" class="w-7 h-5 object-cover rounded shadow-sm inline-block">' },
+            { code: 'THAI', name: 'Batch THAI', fullName: 'Thailand', flag: '<img src="https://flagcdn.com/w40/th.png" alt="TH" class="w-7 h-5 object-cover rounded shadow-sm inline-block">' }
         ];
 
         let state = {
@@ -627,27 +627,31 @@
 
                 return `
                     <button 
-                        onclick="selectCountry('${c.code}')"
-                        class="relative group p-4 sm:p-5 rounded-3xl text-left transition-all duration-200 border-2 ${
-                            isSelected 
-                            ? 'bg-gradient-to-br from-lilac-500 to-tosca-500 text-white border-transparent shadow-lg shadow-lilac-200/90 -translate-y-0.5' 
-                            : 'bg-white hover:bg-lilac-50/50 text-slate-800 border-lilac-100 hover:border-lilac-300 shadow-sm'
-                        }"
-                    >
-                        <div class="flex items-center justify-between gap-2 mb-3">
-                            <span class="text-2xl sm:text-3xl">${c.flag}</span>
-                            ${isComingSoon 
-                                ? `<span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold tracking-wide ${
-                                    isSelected ? 'bg-white/25 text-white' : 'bg-lilac-100 text-lilac-700'
-                                  }">Coming Soon</span>`
-                                : `<span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
-                                    isSelected ? 'bg-white/25 text-white' : 'bg-tosca-50 text-tosca-700 border border-tosca-100'
-                                  }">${count} Batch</span>`
-                            }
+                    onclick="selectCountry('${c.code}')"
+                    class="relative group p-4 sm:p-5 rounded-3xl text-left transition-all duration-200 border-2 ${
+                        isSelected 
+                        ? 'bg-gradient-to-br from-lilac-500 to-tosca-500 text-white border-transparent shadow-lg shadow-lilac-200/90 -translate-y-0.5' 
+                        : 'bg-white hover:bg-lilac-50/50 text-slate-800 border-lilac-100 hover:border-lilac-300 shadow-sm'
+                    }"
+                >
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <div class="font-display font-black text-base sm:text-lg leading-snug flex items-center gap-2">
+                            <span>${c.name}</span>
+                            ${c.flag}
                         </div>
-                        <div class="font-display font-black text-base sm:text-lg leading-snug">${c.name}</div>
-                        <div class="text-xs mt-0.5 ${isSelected ? 'text-white/90' : 'text-slate-400'} font-semibold">${c.fullName}</div>
-                    </button>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 mt-1">
+                        <span class="text-xs ${isSelected ? 'text-white/90' : 'text-slate-400'} font-semibold">${c.fullName}</span>
+                        ${isComingSoon 
+                            ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold tracking-wide ${
+                                isSelected ? 'bg-white/25 text-white' : 'bg-lilac-100 text-lilac-700'
+                              }">Coming Soon</span>`
+                            : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${
+                                isSelected ? 'bg-white/25 text-white' : 'bg-tosca-50 text-tosca-700 border border-tosca-100'
+                              }">${count} Batch</span>`
+                        }
+                    </div>
+                </button>
                 `;
             }).join('');
         }
@@ -690,7 +694,7 @@
                 batchList.classList.add('hidden');
                 emptyState.classList.add('hidden');
 
-                document.getElementById('cs-flag').textContent = countryObj.flag;
+                document.getElementById('cs-flag').innerHTML = countryObj.flag;
                 document.getElementById('cs-title').textContent = `${countryObj.name} (${countryObj.fullName}) Segera Hadir!`;
                 return;
             }
