@@ -792,7 +792,13 @@
                                 Atau Transfer Bank / E-Wallet
                             </div>
                             <div id="other-payments-list" class="space-y-3"></div>
-                            <div id="payment-instruction-note" class="p-3.5 rounded-2xl bg-tosca-50/70 border border-tosca-100 text-xs text-tosca-800 leading-relaxed">
+                        <!-- Kotak Catatan Pembayaran Diperbesar & Mencolok -->
+                        <div class="p-5 sm:p-6 rounded-2xl bg-amber-50 border-2 border-amber-400 shadow-md shadow-amber-100/80 space-y-2.5">
+                            <div class="flex items-center gap-2 text-xs sm:text-sm font-black uppercase tracking-wider text-amber-800">
+                                <i data-lucide="alert-circle" class="w-5 h-5 text-amber-600 shrink-0"></i>
+                                <span>Catatan Penting Pembayaran</span>
+                            </div>
+                            <div id="payment-instruction-note" class="text-base sm:text-lg font-extrabold text-slate-900 leading-relaxed space-y-1.5">
                                 Pastikan nominal transfer sesuai dengan total tagihan agar proses verifikasi lebih cepat ✨
                             </div>
                         </div>
@@ -2030,7 +2036,17 @@
                 `).join('');
             }
 
-            document.getElementById('payment-instruction-note').textContent = state.paymentSettings.payment_note || '';
+            const rawNote = state.paymentSettings.payment_note || 'Pastikan nominal transfer sesuai dengan total tagihan agar proses verifikasi lebih cepat ✨';
+            document.getElementById('payment-instruction-note').innerHTML = escapeHtml(rawNote)
+                .split('\n')
+                .filter(line => line.trim() !== '')
+                .map(line => {
+                    if (/^\s*notes?\s*:/i.test(line)) {
+                        return `<div class="mt-2 p-3 rounded-xl bg-rose-100 border-2 border-rose-300 text-rose-700 font-black text-base sm:text-lg tracking-wide">${line}</div>`;
+                    }
+                    return `<div>${line}</div>`;
+                })
+                .join('');
 
             document.getElementById('proof-verified-box').classList.toggle('hidden', !isVerified);
             document.getElementById('upload-proof-form').classList.toggle('hidden', isVerified);
