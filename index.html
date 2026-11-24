@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PICIQUW — Batch Tracker & Public Updates</title>
+    <title>PICIQUW — Homepage, Batch Tracker & Cek Tagihan</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Nunito & Plus Jakarta Sans -->
@@ -148,155 +148,613 @@
                 <span class="bg-white/20 p-1.5 rounded-xl">
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
                 </span>
-                <span>Admin Mode Aktif — <span id="admin-email-label">PICIQUW Owner</span></span>
+                <span>Admin Mode — <span id="admin-email-label">PICIQUW Owner</span></span>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="openSettingsModal()" class="px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/30 transition text-xs font-bold flex items-center gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="switchPage('billing')" class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 transition text-xs font-bold flex items-center gap-1.5">
+                    <i data-lucide="receipt" class="w-3.5 h-3.5"></i> Kelola Tagihan
+                </button>
+                <button onclick="openPaymentSettingsModal()" class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 transition text-xs font-bold flex items-center gap-1.5">
+                    <i data-lucide="qr-code" class="w-3.5 h-3.5"></i> QRIS &amp; Rekening
+                </button>
+                <button onclick="openSettingsModal()" class="px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 transition text-xs font-bold flex items-center gap-1.5">
                     <i data-lucide="settings" class="w-3.5 h-3.5"></i> Status Negara
                 </button>
-                <button onclick="logoutAdmin()" class="px-4 py-1.5 rounded-full bg-white text-lilac-700 hover:bg-lilac-50 transition text-xs font-extrabold flex items-center gap-1.5 shadow-sm">
+                <button onclick="logoutAdmin()" class="px-3.5 py-1.5 rounded-full bg-white text-lilac-700 hover:bg-lilac-50 transition text-xs font-extrabold flex items-center gap-1.5 shadow-sm">
                     <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Keluar
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Top Navigation Bar -->
+    <header class="relative z-20 pt-5 px-5 sm:px-8">
+        <div class="max-w-5xl mx-auto bg-white/90 backdrop-blur-md border-2 border-lilac-100 rounded-full px-4 sm:px-6 py-2.5 shadow-sm flex items-center justify-between gap-3">
+            <button onclick="switchPage('home')" class="flex items-center gap-2.5 text-left group">
+                <span class="w-9 h-9 rounded-full bg-gradient-to-br from-lilac-500 to-tosca-400 text-white flex items-center justify-center font-display font-black text-base shadow-sm group-hover:scale-105 transition">
+                    P
+                </span>
+                <span class="font-display font-black text-xl tracking-wide bg-gradient-to-r from-lilac-600 to-tosca-500 bg-clip-text text-transparent">
+                    PICIQUW
+                </span>
+            </button>
+
+            <nav aria-label="Menu Utama" class="flex items-center gap-1.5 sm:gap-2">
+                <button onclick="switchPage('home')" data-nav="home" class="nav-pill px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 bg-lilac-500 text-white shadow-sm">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span>Beranda</span>
+                </button>
+                <button onclick="switchPage('tracker')" data-nav="tracker" class="nav-pill px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-lilac-50">
+                    <i data-lucide="package-search" class="w-4 h-4"></i>
+                    <span>Batch Tracker</span>
+                </button>
+                <button onclick="switchPage('billing')" data-nav="billing" class="nav-pill px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-tosca-50">
+                    <i data-lucide="receipt" class="w-4 h-4"></i>
+                    <span>Cek Tagihan</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
     <!-- Main Container -->
-    <main class="relative z-10 flex-1 max-w-5xl w-full mx-auto px-5 sm:px-8 pt-10 pb-20">
-        <header class="text-center mb-10">
-            <div class="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white border-2 border-lilac-200 text-xs font-extrabold text-lilac-700 mb-4 shadow-sm tracking-wide">
-                <span class="w-2.5 h-2.5 rounded-full bg-tosca-400 animate-ping"></span>
-                <span>LIVE SHIPMENT &amp; BATCH UPDATES ✨</span>
-            </div>
-            
-            <h1 class="font-display text-4xl sm:text-6xl font-black tracking-wide bg-gradient-to-r from-lilac-600 via-purple-500 to-tosca-500 bg-clip-text text-transparent pb-2 drop-shadow-sm">
-                PICIQUW
-            </h1>
-            <p class="text-slate-600 text-base sm:text-lg max-w-lg mx-auto mt-2 font-medium leading-relaxed">
-                Cek status terkini pesanan &amp; perjalanan paket kamu dengan mudah dan nyaman 🛍️📦
-            </p>
+    <main class="relative z-10 flex-1 max-w-5xl w-full mx-auto px-5 sm:px-8 pt-8 pb-20">
 
-            <div class="mt-6 max-w-2xl mx-auto bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-3xl border-2 border-lilac-100 shadow-sm">
-                <p class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">
-                    Alur Perjalanan Paket PICIQUW
+        <!-- ==================== PAGE 1: HOMEPAGE ==================== -->
+        <section id="page-home" class="space-y-10">
+            <!-- Hero Section -->
+            <div class="text-center max-w-2xl mx-auto pt-2">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border-2 border-lilac-200 text-xs font-extrabold text-lilac-700 mb-4 shadow-sm tracking-wide">
+                    <span class="w-2.5 h-2.5 rounded-full bg-tosca-400 animate-ping"></span>
+                    <span>WELCOME TO PICIQUW CUSTOMER PORTAL ✨</span>
+                </div>
+                <h1 class="font-display text-4xl sm:text-6xl font-black tracking-wide bg-gradient-to-r from-lilac-600 via-purple-500 to-tosca-500 bg-clip-text text-transparent pb-2 drop-shadow-sm">
+                    PICIQUW
+                </h1>
+                <p class="text-slate-600 text-base sm:text-lg mt-2 font-medium leading-relaxed">
+                    Satu tempat praktis untuk memantau perjalanan paket batch kamu &amp; menyelesaikan pembayaran tagihan pesanan 🛍️💖
                 </p>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-bold">
-                    <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-pink-50 text-pink-700 border border-pink-100">
-                        <span>🛍️</span>
-                        <span>1. Pre-order (PO)</span>
+            </div>
+
+            <!-- Admin Quick Overview Card (Only visible when Admin is logged in) -->
+            <div id="home-admin-summary" class="hidden clean-card rounded-3xl p-6 border-2 border-dashed border-lilac-400 bg-gradient-to-r from-lilac-50/80 to-tosca-50/80">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-lilac-600">Ringkasan Admin</span>
+                        <h2 class="font-display text-xl font-black text-slate-800 mt-0.5">
+                            <span id="stat-pending-invoices">0</span> Tagihan Menunggu Verifikasi &bull; <span id="stat-total-batches">0</span> Batch Aktif
+                        </h2>
                     </div>
-                    <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-amber-50 text-amber-700 border border-amber-100">
-                        <span>🚚</span>
-                        <span>2. Shipping</span>
-                    </div>
-                    <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-lilac-50 text-lilac-700 border border-lilac-100">
-                        <span>🏢</span>
-                        <span>3. WH Luar</span>
-                    </div>
-                    <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-tosca-50 text-tosca-700 border border-tosca-100">
-                        <span>✈️</span>
-                        <span>4. OTW INA</span>
+                    <div class="flex flex-wrap gap-2.5">
+                        <button onclick="switchPage('billing'); openInvoiceModal();" class="px-4 py-2.5 rounded-2xl bg-lilac-600 hover:bg-lilac-700 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat Kode Tagihan
+                        </button>
+                        <button onclick="switchPage('tracker'); openBatchModal();" class="px-4 py-2.5 rounded-2xl bg-tosca-500 hover:bg-tosca-600 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="package-plus" class="w-4 h-4"></i> Tambah Batch
+                        </button>
                     </div>
                 </div>
             </div>
-        </header>
 
-        <!-- Country Navigation Tabs -->
-        <nav aria-label="Pilih Negara Batch" class="mb-8">
-            <div id="country-tabs" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4"></div>
-        </nav>
+            <!-- Two Main Portal Choice Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <!-- Card A: Batch Tracker -->
+                <div onclick="switchPage('tracker')" class="cursor-pointer group clean-card rounded-3xl p-7 sm:p-9 transition-all duration-300 hover:-translate-y-1.5 hover:border-lilac-400 flex flex-col justify-between gap-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-lilac-100 to-purple-200 text-lilac-600 flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition">
+                                📦
+                            </div>
+                            <span class="px-3.5 py-1.5 rounded-full bg-lilac-50 text-lilac-700 border border-lilac-200 text-xs font-extrabold">
+                                Live Update
+                            </span>
+                        </div>
 
-        <!-- Admin Controls -->
-        <div id="admin-controls" class="hidden mb-8 clean-card rounded-3xl p-6 border-2 border-dashed border-lilac-400">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <h2 class="font-display text-lg font-extrabold text-lilac-700 flex items-center gap-2">
-                        <i data-lucide="sparkles" class="w-5 h-5 text-tosca-500"></i>
-                        Kelola <span id="admin-current-country-label">Batch KR</span>
-                    </h2>
-                    <p class="text-sm text-slate-500">Tambah batch baru atau atur status Coming Soon negara ini.</p>
+                        <div>
+                            <h2 class="font-display text-2xl sm:text-3xl font-black text-slate-800 group-hover:text-lilac-700 transition">
+                                Batch Tracker
+                            </h2>
+                            <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+                                Cek posisi terkini pesanan batch kamu dari <strong>Korea, China, Jepang, &amp; Thailand</strong> mulai dari tahap PO hingga OTW Indonesia.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 pt-1">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100 text-xs font-bold text-slate-600">
+                                <img src="https://flagcdn.com/w40/kr.png" alt="KR" class="w-4 h-3 rounded-xs object-cover"> KR
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100 text-xs font-bold text-slate-600">
+                                <img src="https://flagcdn.com/w40/cn.png" alt="CN" class="w-4 h-3 rounded-xs object-cover"> CH
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100 text-xs font-bold text-slate-600">
+                                <img src="https://flagcdn.com/w40/jp.png" alt="JP" class="w-4 h-3 rounded-xs object-cover"> JP
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-50 border border-slate-100 text-xs font-bold text-slate-600">
+                                <img src="https://flagcdn.com/w40/th.png" alt="TH" class="w-4 h-3 rounded-xs object-cover"> THAI
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <span class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-lilac-500 to-purple-500 group-hover:from-lilac-600 group-hover:to-purple-600 text-white font-extrabold text-sm shadow-md shadow-lilac-200 flex items-center justify-center gap-2 transition">
+                            <span>Masuk ke Halaman Tracker</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                        </span>
+                    </div>
                 </div>
-                <div class="flex flex-wrap items-center gap-3">
-                    <button id="toggle-coming-soon-btn" onclick="toggleCountryComingSoon()" class="px-4 py-2.5 rounded-2xl text-xs font-bold border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition flex items-center gap-2">
-                        <i data-lucide="clock" class="w-4 h-4 text-lilac-500"></i>
-                        <span id="toggle-coming-soon-text">Set Coming Soon</span>
+
+                <!-- Card B: Cek Tagihan Customer -->
+                <div onclick="switchPage('billing')" class="cursor-pointer group clean-card rounded-3xl p-7 sm:p-9 transition-all duration-300 hover:-translate-y-1.5 hover:border-tosca-400 flex flex-col justify-between gap-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-tosca-100 to-emerald-200 text-tosca-600 flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition">
+                                💳
+                            </div>
+                            <span class="px-3.5 py-1.5 rounded-full bg-tosca-50 text-tosca-700 border border-tosca-200 text-xs font-extrabold">
+                                QRIS &amp; Transfer
+                            </span>
+                        </div>
+
+                        <div>
+                            <h2 class="font-display text-2xl sm:text-3xl font-black text-slate-800 group-hover:text-tosca-700 transition">
+                                Cek Tagihan Customer
+                            </h2>
+                            <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+                                Punya kode tagihan dari admin? Masukkan kodemu untuk melihat rincian biaya, scan <strong>QRIS</strong> / rekening tujuan, dan unggah bukti bayar.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 pt-1 text-xs font-bold text-slate-600">
+                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">1. Input Kode</span>
+                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">2. Scan QRIS / TF</span>
+                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">3. Upload Bukti</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <span class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-tosca-500 to-emerald-500 group-hover:from-tosca-600 group-hover:to-emerald-600 text-white font-extrabold text-sm shadow-md shadow-tosca-200 flex items-center justify-center gap-2 transition">
+                            <span>Cek Tagihan &amp; Bayar</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Search Invoice Shortcut on Homepage -->
+            <div class="clean-card rounded-3xl p-6 sm:p-8 bg-white/95">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <h3 class="font-display text-lg sm:text-xl font-black text-slate-800 flex items-center gap-2">
+                            <i data-lucide="ticket" class="w-5 h-5 text-tosca-500"></i>
+                            <span>Langsung Cek Kode Tagihanmu</span>
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500">Ketik kode tagihan yang diberikan admin untuk langsung membuka halaman pembayaran.</p>
+                    </div>
+                    <form onsubmit="handleQuickInvoiceSearch(event)" class="flex w-full md:w-auto gap-2.5">
+                        <input 
+                            type="text" 
+                            id="home-invoice-input" 
+                            placeholder="Contoh: PCQ-8821" 
+                            class="flex-1 md:w-56 px-4 py-3 rounded-2xl bg-tosca-50/50 border-2 border-tosca-200 focus:border-tosca-500 focus:bg-white outline-none text-sm font-extrabold uppercase tracking-wider text-slate-800"
+                        >
+                        <button type="submit" class="px-5 py-3 rounded-2xl bg-tosca-500 hover:bg-tosca-600 text-white font-extrabold text-sm shadow-sm transition flex items-center gap-2 shrink-0">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            <span>Cek</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PAGE 2: BATCH TRACKER ==================== -->
+        <section id="page-tracker" class="hidden">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white border-2 border-lilac-200 text-xs font-extrabold text-lilac-700 mb-4 shadow-sm tracking-wide">
+                    <span class="w-2.5 h-2.5 rounded-full bg-tosca-400 animate-ping"></span>
+                    <span>LIVE SHIPMENT &amp; BATCH UPDATES ✨</span>
+                </div>
+                
+                <h1 class="font-display text-3xl sm:text-5xl font-black tracking-wide bg-gradient-to-r from-lilac-600 via-purple-500 to-tosca-500 bg-clip-text text-transparent pb-2">
+                    Batch Tracker PICIQUW
+                </h1>
+                <p class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto mt-1 font-medium leading-relaxed">
+                    Cek status terkini pesanan &amp; perjalanan paket kamu dengan mudah dan nyaman 🛍️📦
+                </p>
+
+                <div class="mt-6 max-w-2xl mx-auto bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-3xl border-2 border-lilac-100 shadow-sm">
+                    <p class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">
+                        Alur Perjalanan Paket PICIQUW
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-bold">
+                        <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-pink-50 text-pink-700 border border-pink-100">
+                            <span>🛍️</span>
+                            <span>1. Pre-order (PO)</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-amber-50 text-amber-700 border border-amber-100">
+                            <span>🚚</span>
+                            <span>2. Shipping</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-lilac-50 text-lilac-700 border border-lilac-100">
+                            <span>🏢</span>
+                            <span>3. WH Luar</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-tosca-50 text-tosca-700 border border-tosca-100">
+                            <span>✈️</span>
+                            <span>4. OTW INA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Country Navigation Tabs -->
+            <nav aria-label="Pilih Negara Batch" class="mb-8">
+                <div id="country-tabs" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4"></div>
+            </nav>
+
+            <!-- Admin Controls for Batches -->
+            <div id="admin-controls" class="hidden mb-8 clean-card rounded-3xl p-6 border-2 border-dashed border-lilac-400">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <h2 class="font-display text-lg font-extrabold text-lilac-700 flex items-center gap-2">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-tosca-500"></i>
+                            Kelola <span id="admin-current-country-label">Batch KR</span>
+                        </h2>
+                        <p class="text-sm text-slate-500">Tambah batch baru atau atur status Coming Soon negara ini.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button id="toggle-coming-soon-btn" onclick="toggleCountryComingSoon()" class="px-4 py-2.5 rounded-2xl text-xs font-bold border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition flex items-center gap-2">
+                            <i data-lucide="clock" class="w-4 h-4 text-lilac-500"></i>
+                            <span id="toggle-coming-soon-text">Set Coming Soon</span>
+                        </button>
+                        <button onclick="openBatchModal()" class="px-5 py-2.5 rounded-2xl text-xs font-extrabold bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white shadow-md shadow-lilac-200 transition flex items-center gap-2">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            Tambah Batch Baru
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div id="filter-bar" class="mb-8 bg-white/95 p-4 sm:p-5 rounded-3xl border-2 border-lilac-100 shadow-sm space-y-4">
+                <div class="relative w-full">
+                    <i data-lucide="search" class="w-5 h-5 text-lilac-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        placeholder="Cari nomor batch atau catatan (misal: Batch 1, Kargo)..." 
+                        oninput="renderBatches()"
+                        class="w-full pl-12 pr-4 py-3 rounded-2xl bg-lilac-50/50 border-2 border-lilac-100 focus:border-lilac-400 focus:bg-white outline-none text-sm font-medium text-slate-700 transition"
+                    >
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-bold text-slate-400 mr-1">Filter Status:</span>
+                    <button onclick="setStatusFilter('ALL')" data-filter="ALL" class="filter-pill px-4 py-2 rounded-xl text-xs font-extrabold transition bg-lilac-500 text-white shadow-sm">
+                        Semua Batch
                     </button>
-                    <button onclick="openBatchModal()" class="px-5 py-2.5 rounded-2xl text-xs font-extrabold bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white shadow-md shadow-lilac-200 transition flex items-center gap-2">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                        Tambah Batch Baru
+                    <button onclick="setStatusFilter('Pre-order (PO)')" data-filter="Pre-order (PO)" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-pink-50 border border-slate-200">
+                        🛍️ Pre-order (PO)
+                    </button>
+                    <button onclick="setStatusFilter('Shipping')" data-filter="Shipping" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-amber-50 border border-slate-200">
+                        🚚 Shipping
+                    </button>
+                    <button onclick="setStatusFilter('WH Luar')" data-filter="WH Luar" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-lilac-50 border border-slate-200">
+                        🏢 WH Luar
+                    </button>
+                    <button onclick="setStatusFilter('OTW INA')" data-filter="OTW INA" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-tosca-50 border border-slate-200">
+                        ✈️ OTW INA
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Search & Filter Bar -->
-        <div id="filter-bar" class="mb-8 bg-white/95 p-4 sm:p-5 rounded-3xl border-2 border-lilac-100 shadow-sm space-y-4">
-            <div class="relative w-full">
-                <i data-lucide="search" class="w-5 h-5 text-lilac-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    placeholder="Cari nomor batch atau catatan (misal: Batch 1, Kargo)..." 
-                    oninput="renderBatches()"
-                    class="w-full pl-12 pr-4 py-3 rounded-2xl bg-lilac-50/50 border-2 border-lilac-100 focus:border-lilac-400 focus:bg-white outline-none text-sm font-medium text-slate-700 transition"
-                >
+            <!-- Loading State -->
+            <div id="loading-state" class="py-20 text-center">
+                <div class="inline-block w-12 h-12 border-4 border-lilac-200 border-t-tosca-400 rounded-full animate-spin mb-4"></div>
+                <p class="text-base text-slate-600 font-semibold">Memuat data batch PICIQUW...</p>
             </div>
-            
-            <div class="flex flex-wrap items-center gap-2">
-                <span class="text-xs font-bold text-slate-400 mr-1">Filter Status:</span>
-                <button onclick="setStatusFilter('ALL')" data-filter="ALL" class="filter-pill px-4 py-2 rounded-xl text-xs font-extrabold transition bg-lilac-500 text-white shadow-sm">
-                    Semua Batch
-                </button>
-                <button onclick="setStatusFilter('Pre-order (PO)')" data-filter="Pre-order (PO)" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-pink-50 border border-slate-200">
-                    🛍️ Pre-order (PO)
-                </button>
-                <button onclick="setStatusFilter('Shipping')" data-filter="Shipping" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-amber-50 border border-slate-200">
-                    🚚 Shipping
-                </button>
-                <button onclick="setStatusFilter('WH Luar')" data-filter="WH Luar" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-lilac-50 border border-slate-200">
-                    🏢 WH Luar
-                </button>
-                <button onclick="setStatusFilter('OTW INA')" data-filter="OTW INA" class="filter-pill px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-50 text-slate-600 hover:bg-tosca-50 border border-slate-200">
-                    ✈️ OTW INA
-                </button>
+
+            <!-- Coming Soon View -->
+            <div id="coming-soon-view" class="hidden clean-card rounded-3xl p-10 sm:p-14 text-center">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-lilac-100 to-tosca-100 flex items-center justify-center text-5xl shadow-inner animate-float" id="cs-flag"></div>
+                <span class="inline-block px-4 py-1.5 rounded-full bg-lilac-100 text-lilac-700 text-xs font-extrabold tracking-widest uppercase mb-4">
+                    Coming Soon
+                </span>
+                <h2 class="font-display text-2xl sm:text-3xl font-black text-slate-800 mb-3" id="cs-title">
+                    Batch Segera Hadir!
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                    Lagi dipersiapin nih sama PICIQUW! Pantau terus update dari kami ya, nanti status pengiriman batch negara ini bakal muncul lengkap di sini ✨
+                </p>
             </div>
-        </div>
 
-        <!-- Loading State -->
-        <div id="loading-state" class="py-20 text-center">
-            <div class="inline-block w-12 h-12 border-4 border-lilac-200 border-t-tosca-400 rounded-full animate-spin mb-4"></div>
-            <p class="text-base text-slate-600 font-semibold">Memuat data batch PICIQUW...</p>
-        </div>
+            <!-- Batch Cards List -->
+            <div id="batch-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
 
-        <!-- Coming Soon View -->
-        <div id="coming-soon-view" class="hidden clean-card rounded-3xl p-10 sm:p-14 text-center">
-            <div class="w-24 h-24 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-lilac-100 to-tosca-100 flex items-center justify-center text-5xl shadow-inner animate-float" id="cs-flag">
-                🇯🇵
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden clean-card rounded-3xl p-12 text-center">
+                <div class="w-20 h-20 mx-auto mb-5 rounded-3xl bg-tosca-50 text-tosca-500 flex items-center justify-center">
+                    <i data-lucide="package-open" class="w-10 h-10"></i>
+                </div>
+                <h3 class="font-display text-xl font-extrabold text-slate-800">Belum Ada Data Batch</h3>
+                <p class="text-sm text-slate-500 mt-2 max-w-sm mx-auto leading-relaxed">
+                    Belum ada batch yang ditambahkan atau tidak ada yang cocok dengan filter pencarianmu.
+                </p>
             </div>
-            <span class="inline-block px-4 py-1.5 rounded-full bg-lilac-100 text-lilac-700 text-xs font-extrabold tracking-widest uppercase mb-4">
-                Coming Soon
-            </span>
-            <h2 class="font-display text-2xl sm:text-3xl font-black text-slate-800 mb-3" id="cs-title">
-                Batch JP (Jepang) Segera Hadir!
-            </h2>
-            <p class="text-slate-600 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
-                Lagi dipersiapin nih sama PICIQUW! Pantau terus update dari kami ya, nanti status pengiriman batch negara ini bakal muncul lengkap di sini ✨
-            </p>
-        </div>
+        </section>
 
-        <!-- Batch Cards List -->
-        <div id="batch-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
-
-        <!-- Empty State -->
-        <div id="empty-state" class="hidden clean-card rounded-3xl p-12 text-center">
-            <div class="w-20 h-20 mx-auto mb-5 rounded-3xl bg-tosca-50 text-tosca-500 flex items-center justify-center">
-                <i data-lucide="package-open" class="w-10 h-10"></i>
+        <!-- ==================== PAGE 3: CEK TAGIHAN & PEMBAYARAN ==================== -->
+        <section id="page-billing" class="hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border-2 border-tosca-200 text-xs font-extrabold text-tosca-700 mb-4 shadow-sm tracking-wide">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-tosca-500"></i>
+                    <span>PEMBAYARAN &amp; KONFIRMASI TAGIHAN</span>
+                </div>
+                <h1 class="font-display text-3xl sm:text-5xl font-black tracking-wide bg-gradient-to-r from-tosca-500 via-teal-500 to-lilac-600 bg-clip-text text-transparent pb-2">
+                    Cek Tagihan Customer
+                </h1>
+                <p class="text-slate-600 text-sm sm:text-base mt-1 font-medium leading-relaxed">
+                    Masukkan kode tagihan dari admin untuk melihat rincian pesanan, scan QRIS / transfer, dan kirim bukti pembayaran 🧾✨
+                </p>
             </div>
-            <h3 class="font-display text-xl font-extrabold text-slate-800">Belum Ada Data Batch</h3>
-            <p class="text-sm text-slate-500 mt-2 max-w-sm mx-auto leading-relaxed">
-                Belum ada batch yang ditambahkan atau tidak ada yang cocok dengan filter pencarianmu.
-            </p>
-        </div>
+
+            <!-- ADMIN INVOICE MANAGEMENT PANEL (Visible only when Admin is logged in) -->
+            <div id="admin-billing-panel" class="hidden space-y-6">
+                <div class="clean-card rounded-3xl p-6 border-2 border-dashed border-lilac-400">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <h2 class="font-display text-lg font-extrabold text-lilac-700 flex items-center gap-2">
+                                <i data-lucide="receipt" class="w-5 h-5 text-tosca-500"></i>
+                                <span>Kelola Tagihan Customer (Admin)</span>
+                            </h2>
+                            <p class="text-sm text-slate-500">Buat kode tagihan baru, atur metode QRIS/rekening, dan verifikasi bukti bayar.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <button onclick="openPaymentSettingsModal()" class="px-4 py-2.5 rounded-2xl text-xs font-bold border-2 border-tosca-200 bg-tosca-50 hover:bg-tosca-100 text-tosca-700 transition flex items-center gap-2">
+                                <i data-lucide="qr-code" class="w-4 h-4"></i>
+                                <span>Atur QRIS &amp; Rekening</span>
+                            </button>
+                            <button onclick="openInvoiceModal()" class="px-5 py-2.5 rounded-2xl text-xs font-extrabold bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white shadow-md shadow-lilac-200 transition flex items-center gap-2">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                <span>Buat Kode Tagihan</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Admin Invoice Filter & Search -->
+                    <div class="mt-5 pt-5 border-t border-slate-100 space-y-3">
+                        <div class="relative">
+                            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                            <input 
+                                type="text" 
+                                id="admin-invoice-search" 
+                                oninput="renderAdminInvoices()" 
+                                placeholder="Cari kode tagihan, nama customer, atau rincian..." 
+                                class="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-400 focus:bg-white outline-none text-xs sm:text-sm font-medium"
+                            >
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setAdminInvoiceFilter('ALL')" data-inv-filter="ALL" class="inv-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-lilac-500 text-white">Semua</button>
+                            <button onclick="setAdminInvoiceFilter('Menunggu Verifikasi')" data-inv-filter="Menunggu Verifikasi" class="inv-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">⏳ Menunggu Verifikasi</button>
+                            <button onclick="setAdminInvoiceFilter('Belum Bayar')" data-inv-filter="Belum Bayar" class="inv-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">💳 Belum Bayar</button>
+                            <button onclick="setAdminInvoiceFilter('Lunas')" data-inv-filter="Lunas" class="inv-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">✅ Lunas</button>
+                            <button onclick="setAdminInvoiceFilter('Bukti Ditolak')" data-inv-filter="Bukti Ditolak" class="inv-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600">⚠️ Bukti Ditolak</button>
+                        </div>
+                    </div>
+
+                    <!-- Admin Invoice List -->
+                    <div id="admin-invoice-list" class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- CUSTOMER INVOICE LOOKUP BOX -->
+            <div class="max-w-xl mx-auto clean-card rounded-3xl p-6 sm:p-8">
+                <form onsubmit="handleSearchInvoice(event)" class="space-y-4">
+                    <label for="customer-invoice-code" class="block text-xs font-extrabold uppercase tracking-wider text-slate-500 text-center">
+                        Masukkan Kode Tagihan Kamu
+                    </label>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input 
+                            type="text" 
+                            id="customer-invoice-code" 
+                            placeholder="CONTOH: PCQ-8821" 
+                            required
+                            class="flex-1 px-5 py-3.5 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-tosca-500 focus:bg-white outline-none text-center sm:text-left text-lg font-black uppercase tracking-widest text-slate-800"
+                        >
+                        <button type="submit" id="search-invoice-btn" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-tosca-500 to-lilac-500 hover:from-tosca-600 hover:to-lilac-600 text-white font-extrabold text-sm shadow-lg shadow-tosca-200 transition flex items-center justify-center gap-2">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            <span>Lihat Tagihan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- INVOICE NOT FOUND ALERT -->
+            <div id="invoice-not-found" class="hidden max-w-xl mx-auto clean-card rounded-3xl p-8 text-center border-rose-200 bg-rose-50/60">
+                <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-500 flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="file-x" class="w-7 h-7"></i>
+                </div>
+                <h3 class="font-display font-extrabold text-lg text-slate-800">Kode Tagihan Tidak Ditemukan</h3>
+                <p class="text-sm text-slate-600 mt-1">
+                    Pastikan huruf dan angka kode tagihan sudah sesuai dengan yang diberikan oleh admin PICIQUW ya.
+                </p>
+            </div>
+
+            <!-- CUSTOMER INVOICE DETAIL & PAYMENT RESULT -->
+            <div id="customer-invoice-result" class="hidden max-w-3xl mx-auto space-y-6">
+                <!-- 1. Invoice Summary Card -->
+                <div class="clean-card rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div class="flex flex-wrap items-start justify-between gap-4 pb-5 border-b border-slate-100">
+                        <div>
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Kode Tagihan</span>
+                            <div class="flex items-center gap-2.5 mt-0.5">
+                                <h2 id="inv-res-code" class="font-display text-2xl sm:text-3xl font-black text-lilac-700 tracking-wider">PCQ-0000</h2>
+                                <button onclick="copyText(document.getElementById('inv-res-code').textContent, 'Kode tagihan disalin!')" class="p-2 rounded-xl bg-lilac-50 hover:bg-lilac-100 text-lilac-600 transition" title="Salin Kode">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="inv-res-status-badge"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <span class="block text-xs font-bold text-slate-400">Nama Customer</span>
+                            <span id="inv-res-customer" class="font-extrabold text-slate-800 text-base mt-0.5 block">-</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <span class="block text-xs font-bold text-slate-400">Batch / Kategori Pesanan</span>
+                            <span id="inv-res-batch" class="font-extrabold text-slate-800 text-base mt-0.5 block">-</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 sm:p-5 rounded-2xl bg-lilac-50/50 border border-lilac-100 space-y-1.5">
+                        <span class="block text-xs font-extrabold uppercase tracking-wider text-lilac-600">Rincian Pesanan</span>
+                        <p id="inv-res-items" class="text-sm sm:text-base text-slate-700 font-medium whitespace-pre-line leading-relaxed">-</p>
+                    </div>
+
+                    <div id="inv-res-note-box" class="hidden p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs sm:text-sm text-amber-900">
+                        <strong class="font-extrabold">Catatan Admin:</strong> <span id="inv-res-note"></span>
+                    </div>
+
+                    <!-- Total Amount Box -->
+                    <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-lilac-600 via-purple-600 to-tosca-500 text-white flex flex-wrap items-center justify-between gap-4 shadow-lg shadow-lilac-200">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-white/80">Total Tagihan Pembayaran</span>
+                            <div id="inv-res-amount" class="font-display text-3xl sm:text-4xl font-black mt-0.5">Rp 0</div>
+                        </div>
+                        <button id="copy-amount-btn" type="button" class="px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/30 text-white text-xs font-extrabold transition flex items-center gap-2 backdrop-blur-xs">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            <span>Salin Nominal</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Payment Methods Card (QRIS & Bank/E-Wallet) -->
+                <div id="payment-methods-section" class="clean-card rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h3 class="font-display text-xl font-black text-slate-800 flex items-center gap-2">
+                            <i data-lucide="wallet" class="w-5 h-5 text-tosca-500"></i>
+                            <span>Pilih Metode Pembayaran</span>
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Silakan lakukan pembayaran sesuai nominal total tagihan melalui QRIS atau rekening di bawah ini.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <!-- QRIS Display -->
+                        <div class="p-5 rounded-3xl bg-gradient-to-b from-lilac-50/80 to-white border-2 border-lilac-200 text-center space-y-4">
+                            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-lilac-100 text-lilac-700 text-xs font-extrabold">
+                                <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
+                                <span>Scan QRIS (Semua E-Wallet &amp; M-Banking)</span>
+                            </div>
+
+                            <div id="qris-display-wrapper" class="bg-white p-3 rounded-2xl border border-lilac-100 shadow-xs inline-block mx-auto">
+                                <img id="qris-image-el" src="" alt="QRIS PICIQUW" class="w-56 h-56 sm:w-60 sm:h-60 object-contain mx-auto rounded-xl hidden">
+                                <div id="qris-placeholder" class="w-56 h-56 flex flex-col items-center justify-center text-slate-400 text-xs p-4">
+                                    <i data-lucide="image-off" class="w-8 h-8 mb-2 text-lilac-300"></i>
+                                    <span>QRIS belum diunggah admin. Gunakan transfer rekening di samping.</span>
+                                </div>
+                            </div>
+
+                            <div id="qris-actions" class="hidden flex items-center justify-center gap-2">
+                                <button type="button" onclick="openImageLightbox(document.getElementById('qris-image-el').src, 'QRIS Pembayaran PICIQUW')" class="px-4 py-2 rounded-xl bg-lilac-100 hover:bg-lilac-200 text-lilac-700 text-xs font-extrabold transition flex items-center gap-1.5">
+                                    <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Perbesar QRIS
+                                </button>
+                                <a id="qris-download-link" href="#" download="QRIS-PICIQUW.png" target="_blank" class="px-4 py-2 rounded-xl bg-tosca-100 hover:bg-tosca-200 text-tosca-700 text-xs font-extrabold transition flex items-center gap-1.5">
+                                    <i data-lucide="download" class="w-3.5 h-3.5"></i> Simpan Gambar
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Bank Transfer / E-Wallet List -->
+                        <div class="space-y-3">
+                            <div class="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                                Atau Transfer Bank / E-Wallet
+                            </div>
+                            <div id="other-payments-list" class="space-y-3"></div>
+                            <div id="payment-instruction-note" class="p-3.5 rounded-2xl bg-tosca-50/70 border border-tosca-100 text-xs text-tosca-800 leading-relaxed">
+                                Pastikan nominal transfer sesuai dengan total tagihan agar proses verifikasi lebih cepat ✨
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Upload Proof of Payment Card -->
+                <div class="clean-card rounded-3xl p-6 sm:p-8 space-y-5">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div>
+                            <h3 class="font-display text-xl font-black text-slate-800 flex items-center gap-2">
+                                <i data-lucide="image-plus" class="w-5 h-5 text-lilac-500"></i>
+                                <span>Bukti Pembayaran</span>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Unggah screenshot / foto bukti transfer kamu di bawah ini.</p>
+                        </div>
+                    </div>
+
+                    <!-- Already Paid (Verified) State -->
+                    <div id="proof-verified-box" class="hidden p-5 rounded-2xl bg-tosca-50 border-2 border-tosca-200 flex flex-col sm:flex-row items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-tosca-500 text-white flex items-center justify-center shrink-0">
+                            <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+                        </div>
+                        <div class="flex-1 text-center sm:text-left">
+                            <h4 class="font-display font-black text-base text-tosca-800">Pembayaran Sudah Dikonfirmasi Lunas!</h4>
+                            <p class="text-xs text-tosca-700 mt-0.5">Terima kasih sudah melakukan pembayaran. Pesananmu sedang diproses sesuai jadwal batch ✨</p>
+                        </div>
+                        <button id="view-verified-proof-btn" type="button" class="px-4 py-2 rounded-xl bg-white border border-tosca-200 text-tosca-700 text-xs font-extrabold hover:bg-tosca-100 transition">
+                            Lihat Bukti Bayar
+                        </button>
+                    </div>
+
+                    <!-- Existing Uploaded Proof Preview (While waiting verification or rejected) -->
+                    <div id="existing-proof-box" class="hidden p-4 rounded-2xl bg-lilac-50/70 border border-lilac-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <img id="existing-proof-thumb" src="" alt="Bukti Bayar" class="w-16 h-16 rounded-xl object-cover border border-lilac-200 cursor-pointer" onclick="openImageLightbox(this.src, 'Bukti Pembayaran Terunggah')">
+                            <div>
+                                <span class="text-xs font-extrabold text-lilac-700 block">Bukti Pembayaran Terkirim</span>
+                                <span id="existing-proof-time" class="text-[11px] text-slate-500 block mt-0.5">-</span>
+                                <span id="existing-proof-note" class="text-xs text-slate-700 italic block mt-0.5"></span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="openImageLightbox(document.getElementById('existing-proof-thumb').src, 'Bukti Pembayaran Terunggah')" class="px-3.5 py-2 rounded-xl bg-white border border-lilac-200 text-lilac-700 text-xs font-bold hover:bg-lilac-100 transition">
+                            Perbesar Foto
+                        </button>
+                    </div>
+
+                    <!-- Upload Form -->
+                    <form id="upload-proof-form" onsubmit="handleUploadPaymentProof(event)" class="space-y-4">
+                        <label class="block cursor-pointer">
+                            <input type="file" id="proof-file-input" accept="image/*" onchange="previewProofFile(event)" class="sr-only">
+                            <div id="proof-dropzone" class="p-6 rounded-3xl border-2 border-dashed border-lilac-300 bg-lilac-50/40 hover:bg-lilac-50 transition text-center space-y-2">
+                                <div id="proof-preview-container" class="hidden mb-3">
+                                    <img id="proof-preview-img" src="" alt="Preview Bukti" class="max-h-56 mx-auto rounded-2xl shadow-md border-2 border-white">
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-white text-lilac-500 flex items-center justify-center mx-auto shadow-xs">
+                                    <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                                </div>
+                                <div class="text-sm font-extrabold text-slate-700" id="proof-file-label">
+                                    Klik untuk pilih gambar bukti pembayaran
+                                </div>
+                                <p class="text-xs text-slate-400">Format JPG, PNG, atau WEBP (Screenshot M-Banking / E-Wallet)</p>
+                            </div>
+                        </label>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Pengirim / Catatan Pembayaran (Opsional)</label>
+                            <input 
+                                type="text" 
+                                id="proof-sender-note" 
+                                placeholder="Contoh: Transfer via QRIS / BCA a.n. Nisa" 
+                                class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-tosca-500 focus:bg-white outline-none text-sm font-medium"
+                            >
+                        </div>
+
+                        <button type="submit" id="submit-proof-btn" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-tosca-500 to-lilac-500 hover:from-tosca-600 hover:to-lilac-600 text-white font-extrabold text-sm shadow-lg shadow-tosca-200 transition flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Kirim Bukti Pembayaran</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
@@ -318,9 +776,9 @@
 
     <!-- ==================== MODALS ==================== -->
 
-    <!-- 1. Admin Login Modal (Email & Password Supabase Auth) -->
+    <!-- 1. Admin Login Modal -->
     <div id="login-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl border-2 border-lilac-100 transform transition-all">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl border-2 border-lilac-100">
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-lilac-100 to-tosca-100 flex items-center justify-center text-lilac-600">
@@ -339,30 +797,15 @@
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1.5">Email Admin</label>
-                    <input 
-                        type="email" 
-                        id="admin-email-input" 
-                        placeholder="admin@piciquw.com" 
-                        required
-                        class="w-full px-4 py-3 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-800"
-                    >
+                    <input type="email" id="admin-email-input" placeholder="admin@piciquw.com" required class="w-full px-4 py-3 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-800">
                 </div>
-
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1.5">Password</label>
-                    <input 
-                        type="password" 
-                        id="admin-password-input" 
-                        placeholder="••••••••" 
-                        required
-                        class="w-full px-4 py-3 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-800"
-                    >
+                    <input type="password" id="admin-password-input" placeholder="••••••••" required class="w-full px-4 py-3 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-800">
                 </div>
-
                 <div id="login-error" class="hidden text-xs text-rose-600 font-bold text-center bg-rose-50 py-2.5 px-3 rounded-xl border border-rose-200">
                     Email atau password salah!
                 </div>
-
                 <button type="submit" id="login-submit-btn" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white font-extrabold text-sm shadow-lg shadow-lilac-200 transition">
                     Masuk ke Admin Mode
                 </button>
@@ -390,26 +833,19 @@
 
             <form onsubmit="handleSaveBatch(event)" class="space-y-5">
                 <input type="hidden" id="edit-batch-id">
-
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-2">Negara</label>
                         <select id="batch-country" class="w-full px-4 py-3 rounded-2xl bg-lilac-50/50 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-700">
-                            <option value="KR">🇰🇷 Batch KR (Korea)</option>
-                            <option value="CH">🇨🇳 Batch CH (China)</option>
-                            <option value="JP">🇯🇵 Batch JP (Jepang)</option>
-                            <option value="THAI">🇹🇭 Batch THAI (Thailand)</option>
+                            <option value="KR">Batch KR (Korea)</option>
+                            <option value="CH">Batch CH (China)</option>
+                            <option value="JP">Batch JP (Jepang)</option>
+                            <option value="THAI">Batch THAI (Thailand)</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-2">Nama / Nomor Batch</label>
-                        <input 
-                            type="text" 
-                            id="batch-name" 
-                            placeholder="Contoh: Batch 1" 
-                            required
-                            class="w-full px-4 py-3 rounded-2xl bg-lilac-50/50 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-700"
-                        >
+                        <input type="text" id="batch-name" placeholder="Contoh: Batch 1" required class="w-full px-4 py-3 rounded-2xl bg-lilac-50/50 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-700">
                     </div>
                 </div>
 
@@ -461,48 +897,166 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-2">Catatan / Update Publik (Opsional)</label>
-                    <textarea 
-                        id="batch-note" 
-                        rows="3" 
-                        placeholder="Contoh: Paket sedang dalam pengiriman udara menuju Indonesia, estimasi tiba 3-5 hari..."
-                        class="w-full px-4 py-3 rounded-2xl bg-lilac-50/50 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm text-slate-700 resize-none leading-relaxed"
-                    ></textarea>
+                    <textarea id="batch-note" rows="3" placeholder="Contoh: Paket sedang dalam pengiriman udara menuju Indonesia, estimasi tiba 3-5 hari..." class="w-full px-4 py-3 rounded-2xl bg-lilac-50/50 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm text-slate-700 resize-none leading-relaxed"></textarea>
                 </div>
 
                 <div class="flex items-center gap-3 pt-2">
-                    <button type="button" onclick="closeModal('batch-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">
-                        Batal
-                    </button>
-                    <button type="submit" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white font-extrabold text-sm shadow-md shadow-lilac-200 transition">
-                        Simpan Batch
-                    </button>
+                    <button type="button" onclick="closeModal('batch-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">Batal</button>
+                    <button type="submit" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white font-extrabold text-sm shadow-md shadow-lilac-200 transition">Simpan Batch</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 3. Delete Confirmation Modal -->
+    <!-- 3. Create / Edit Customer Invoice Modal (Admin) -->
+    <div id="invoice-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-7 shadow-2xl border-2 border-lilac-100 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-tosca-100 to-lilac-100 flex items-center justify-center text-lilac-600">
+                        <i data-lucide="receipt" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 id="invoice-modal-title" class="font-display font-extrabold text-lg text-slate-800">Buat Kode Tagihan Baru</h3>
+                        <p class="text-xs text-slate-400 font-medium">Customer cek tagihan &amp; upload bukti dengan kode ini</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('invoice-modal')" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSaveInvoice(event)" class="space-y-4">
+                <input type="hidden" id="edit-invoice-id">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Kode Tagihan (Unik)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="inv-code-input" placeholder="PCQ-8821" required class="flex-1 px-4 py-3 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-black uppercase tracking-wider text-slate-800">
+                        <button type="button" onclick="generateRandomInvoiceCode()" class="px-4 py-3 rounded-2xl bg-tosca-100 hover:bg-tosca-200 text-tosca-700 text-xs font-extrabold transition shrink-0">
+                            Acak Kode
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Customer</label>
+                        <input type="text" id="inv-customer-input" placeholder="Contoh: Nisa (@nisa_kr)" required class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Batch / Negara</label>
+                        <input type="text" id="inv-batch-input" placeholder="Contoh: Batch KR - Batch 1" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-800">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Total Tagihan (Rp)</label>
+                        <input type="number" id="inv-amount-input" min="0" step="100" placeholder="150000" required class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm font-extrabold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Status Tagihan</label>
+                        <select id="inv-status-input" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm font-bold text-slate-800">
+                            <option value="Belum Bayar">💳 Belum Bayar</option>
+                            <option value="Menunggu Verifikasi">⏳ Menunggu Verifikasi</option>
+                            <option value="Lunas">✅ Lunas</option>
+                            <option value="Bukti Ditolak">⚠️ Bukti Ditolak</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Rincian Pesanan / Item</label>
+                    <textarea id="inv-items-input" rows="3" required placeholder="Contoh:&#10;- 1x Album Photobook Ver. A (Rp 120.000)&#10;- EMS & Tax Sharing (Rp 30.000)" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm text-slate-700 resize-none leading-relaxed"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Catatan untuk Customer (Opsional)</label>
+                    <input type="text" id="inv-note-input" placeholder="Contoh: Pelunasan maksimal 28 Nov 2026" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm text-slate-700">
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="button" onclick="closeModal('invoice-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">Batal</button>
+                    <button type="submit" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white font-extrabold text-sm shadow-md shadow-lilac-200 transition">Simpan Tagihan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. Payment Methods & QRIS Settings Modal (Admin) -->
+    <div id="payment-settings-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-7 shadow-2xl border-2 border-lilac-100 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-tosca-100 text-tosca-600 flex items-center justify-center">
+                        <i data-lucide="qr-code" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-extrabold text-lg text-slate-800">Atur QRIS &amp; Rekening</h3>
+                        <p class="text-xs text-slate-400 font-medium">Tampil di halaman Cek Tagihan Customer</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('payment-settings-modal')" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSavePaymentSettings(event)" class="space-y-5">
+                <!-- QRIS Upload / URL -->
+                <div class="p-4 rounded-2xl bg-lilac-50/70 border border-lilac-200 space-y-3">
+                    <label class="block text-xs font-extrabold text-lilac-700">1. Gambar QRIS PICIQUW</label>
+                    <div class="flex items-center gap-4">
+                        <img id="admin-qris-preview" src="" alt="Preview QRIS" class="w-20 h-20 rounded-xl object-contain bg-white border border-lilac-200 hidden">
+                        <div class="flex-1 space-y-2">
+                            <input type="file" id="admin-qris-file" accept="image/*" onchange="handleUploadAdminQris(event)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-extrabold file:bg-lilac-600 file:text-white hover:file:bg-lilac-700 cursor-pointer">
+                            <input type="url" id="admin-qris-url" placeholder="Atau tempel link gambar QRIS (https://...)" oninput="syncAdminQrisPreview()" class="w-full px-3.5 py-2 rounded-xl bg-white border border-lilac-200 text-xs outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Payment Methods -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-extrabold text-slate-700">2. Rekening Bank / E-Wallet Lainnya</label>
+                        <button type="button" onclick="addPaymentMethodRow()" class="px-3 py-1.5 rounded-xl bg-tosca-100 hover:bg-tosca-200 text-tosca-700 text-xs font-extrabold transition flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah Metode
+                        </button>
+                    </div>
+                    <div id="admin-payment-methods-list" class="space-y-2.5"></div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Catatan Tambahan Pembayaran</label>
+                    <input type="text" id="admin-payment-note" placeholder="Contoh: Pastikan nominal sesuai total tagihan sebelum upload bukti." class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-xs sm:text-sm">
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="button" onclick="closeModal('payment-settings-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">Batal</button>
+                    <button type="submit" id="save-payment-settings-btn" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white font-extrabold text-sm shadow-md shadow-lilac-200 transition">Simpan Pengaturan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. Delete Confirmation Modal -->
     <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
         <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl border-2 border-rose-100 text-center">
             <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-4">
                 <i data-lucide="trash-2" class="w-7 h-7"></i>
             </div>
-            <h3 class="font-display font-extrabold text-lg text-slate-800">Hapus Batch Ini?</h3>
+            <h3 class="font-display font-extrabold text-lg text-slate-800">Hapus Data Ini?</h3>
             <p class="text-sm text-slate-500 mt-2 mb-6 leading-relaxed" id="delete-modal-desc">
-                Data batch yang dihapus tidak dapat dikembalikan.
+                Data yang dihapus tidak dapat dikembalikan.
             </p>
             <div class="flex items-center gap-3">
-                <button onclick="closeModal('delete-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">
-                    Batal
-                </button>
-                <button id="confirm-delete-btn" class="flex-1 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm shadow-md shadow-rose-200 transition">
-                    Ya, Hapus
-                </button>
+                <button onclick="closeModal('delete-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">Batal</button>
+                <button id="confirm-delete-btn" class="flex-1 py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm shadow-md shadow-rose-200 transition">Ya, Hapus</button>
             </div>
         </div>
     </div>
 
-    <!-- 4. Admin Settings Modal (Country Statuses) -->
+    <!-- 6. Admin Country Settings Modal -->
     <div id="settings-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
         <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border-2 border-lilac-100">
             <div class="flex items-center justify-between mb-6">
@@ -519,16 +1073,29 @@
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-
             <div class="space-y-2.5" id="settings-country-list"></div>
         </div>
     </div>
 
-    <!-- Supabase & App Logic -->
+    <!-- 7. Image Lightbox Preview Modal -->
+    <div id="lightbox-modal" onclick="closeModal('lightbox-modal')" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/75 backdrop-blur-xs">
+        <div onclick="event.stopPropagation()" class="bg-white rounded-3xl max-w-lg w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h4 id="lightbox-title" class="font-display font-extrabold text-base text-slate-800">Preview Gambar</h4>
+                <button onclick="closeModal('lightbox-modal')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <img id="lightbox-img" src="" alt="Preview" class="max-h-[70vh] w-auto mx-auto rounded-2xl border border-slate-100">
+        </div>
+    </div>
+
+    <!-- App & Supabase Logic -->
     <script>
         // ====== KONFIGURASI SUPABASE PICIQUW ======
         const SUPABASE_URL = "https://cwpyhgasbmauesacdiag.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_ouDVGuaX-Ogc8zFBPXryhA_CoBNWK46";
+        const STORAGE_BUCKET = "piciquw-uploads";
         // =========================================
 
         const COUNTRIES = [
@@ -539,12 +1106,24 @@
         ];
 
         let state = {
+            currentPage: 'home',
             selectedCountry: 'KR',
             statusFilter: 'ALL',
             user: null,
             comingSoonMap: { KR: false, CH: false, JP: true, THAI: true },
             batches: [],
-            isSupabaseReady: false
+            invoices: [],
+            adminInvoiceFilter: 'ALL',
+            activeCustomerInvoice: null,
+            selectedProofFile: null,
+            paymentSettings: {
+                qris_url: '',
+                payment_methods: [
+                    { label: 'BCA', number: '1234567890', holder: 'PICIQUW' },
+                    { label: 'DANA / GoPay', number: '081234567890', holder: 'PICIQUW' }
+                ],
+                payment_note: 'Pastikan nominal transfer sesuai dengan total tagihan agar proses verifikasi lebih cepat ✨'
+            }
         };
 
         let sb = null;
@@ -553,35 +1132,42 @@
             document.getElementById('year').textContent = new Date().getFullYear();
             lucide.createIcons();
 
-            if (SUPABASE_URL && !SUPABASE_URL.startsWith('ISI_') && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.startsWith('ISI_')) {
-                sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                state.isSupabaseReady = true;
+            sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-                // Cek sesi login admin yang tersimpan
-                const { data: { session } } = await sb.auth.getSession();
+            const { data: { session } } = await sb.auth.getSession();
+            state.user = session?.user || null;
+
+            sb.auth.onAuthStateChange((_event, session) => {
                 state.user = session?.user || null;
-
-                sb.auth.onAuthStateChange((_event, session) => {
-                    state.user = session?.user || null;
-                    renderAll();
-                });
-
-                await fetchAllData();
-                setupRealtimeSubscriptions();
-            } else {
-                document.getElementById('sync-dot').className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
-                document.getElementById('sync-label').textContent = 'Belum Terhubung DB';
-                document.getElementById('loading-state').classList.add('hidden');
                 renderAll();
+            });
+
+            await fetchAllData();
+            setupRealtimeSubscriptions();
+
+            // Check URL params (?page=tracker / ?page=billing / ?kode=PCQ-XXXX)
+            const params = new URLSearchParams(window.location.search);
+            const kodeParam = params.get('kode');
+            const pageParam = params.get('page');
+
+            if (kodeParam) {
+                switchPage('billing');
+                document.getElementById('customer-invoice-code').value = kodeParam.toUpperCase();
+                await lookupInvoiceByCode(kodeParam.toUpperCase());
+            } else if (pageParam === 'tracker' || pageParam === 'billing') {
+                switchPage(pageParam);
+            } else {
+                switchPage('home');
             }
         }
 
         async function fetchAllData() {
             if (!sb) return;
             try {
-                const [batchesRes, settingsRes] = await Promise.all([
+                const [batchesRes, settingsRes, paymentRes] = await Promise.all([
                     sb.from('batches').select('*'),
-                    sb.from('country_settings').select('*')
+                    sb.from('country_settings').select('*'),
+                    sb.from('payment_settings').select('*').eq('id', 'default').maybeSingle()
                 ]);
 
                 if (batchesRes.data) {
@@ -594,9 +1180,30 @@
                         state.comingSoonMap[row.country] = row.coming_soon;
                     });
                 }
+                if (paymentRes.data) {
+                    state.paymentSettings = {
+                        qris_url: paymentRes.data.qris_url || '',
+                        payment_methods: Array.isArray(paymentRes.data.payment_methods) ? paymentRes.data.payment_methods : [],
+                        payment_note: paymentRes.data.payment_note || ''
+                    };
+                }
+
+                // Fetch all invoices if Admin is logged in
+                if (state.user) {
+                    const invRes = await sb.from('invoices').select('*').order('created_at', { ascending: false });
+                    if (invRes.data) state.invoices = invRes.data;
+                }
+
+                // Refresh active customer invoice if currently open
+                if (state.activeCustomerInvoice) {
+                    const fresh = await sb.from('invoices').select('*').eq('invoice_code', state.activeCustomerInvoice.invoice_code).maybeSingle();
+                    if (fresh.data) {
+                        state.activeCustomerInvoice = fresh.data;
+                        renderCustomerInvoiceResult();
+                    }
+                }
             } catch (err) {
                 console.error('Fetch error:', err);
-                showToast('Gagal memuat data dari server.', 'error');
             } finally {
                 document.getElementById('loading-state').classList.add('hidden');
                 renderAll();
@@ -605,19 +1212,70 @@
 
         function setupRealtimeSubscriptions() {
             if (!sb) return;
-            sb.channel('piciquw-realtime')
+            sb.channel('piciquw-all-realtime')
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'batches' }, () => fetchAllData())
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'country_settings' }, () => fetchAllData())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => fetchAllData())
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'payment_settings' }, () => fetchAllData())
                 .subscribe();
         }
 
+        // Page Switching
+        function switchPage(page) {
+            state.currentPage = page;
+            document.getElementById('page-home').classList.toggle('hidden', page !== 'home');
+            document.getElementById('page-tracker').classList.toggle('hidden', page !== 'tracker');
+            document.getElementById('page-billing').classList.toggle('hidden', page !== 'billing');
+
+            document.querySelectorAll('.nav-pill').forEach(btn => {
+                const isActive = btn.dataset.nav === page;
+                btn.className = isActive
+                    ? 'nav-pill px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-extrabold transition flex items-center gap-1.5 bg-lilac-500 text-white shadow-sm'
+                    : 'nav-pill px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-lilac-50';
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            renderAll();
+        }
+
         function renderAll() {
-            renderCountryTabs();
             renderAdminControls();
+            renderHomeAdminSummary();
+            renderCountryTabs();
             renderBatches();
+            renderAdminInvoices();
             lucide.createIcons();
         }
 
+        function renderHomeAdminSummary() {
+            const summaryBox = document.getElementById('home-admin-summary');
+            if (!state.user) {
+                summaryBox.classList.add('hidden');
+                return;
+            }
+            summaryBox.classList.remove('hidden');
+            const pendingCount = state.invoices.filter(i => i.status === 'Menunggu Verifikasi').length;
+            document.getElementById('stat-pending-invoices').textContent = pendingCount;
+            document.getElementById('stat-total-batches').textContent = state.batches.length;
+        }
+
+        function renderAdminControls() {
+            const isAdmin = Boolean(state.user);
+            document.getElementById('admin-banner').classList.toggle('hidden', !isAdmin);
+            document.getElementById('admin-controls').classList.toggle('hidden', !isAdmin);
+            document.getElementById('admin-billing-panel').classList.toggle('hidden', !isAdmin);
+            document.getElementById('footer-admin-btn').classList.toggle('hidden', isAdmin);
+
+            if (isAdmin) {
+                document.getElementById('admin-email-label').textContent = state.user.email || 'PICIQUW Owner';
+                const currentCountryObj = COUNTRIES.find(c => c.code === state.selectedCountry);
+                const isCS = state.comingSoonMap[state.selectedCountry];
+                document.getElementById('admin-current-country-label').textContent = `${currentCountryObj.name} (${currentCountryObj.fullName})`;
+                document.getElementById('toggle-coming-soon-text').textContent = isCS ? 'Aktifkan Negara Ini' : 'Set Coming Soon';
+            }
+        }
+
+        // ==================== BATCH TRACKER LOGIC ====================
         function renderCountryTabs() {
             const container = document.getElementById('country-tabs');
             container.innerHTML = COUNTRIES.map(c => {
@@ -627,56 +1285,33 @@
 
                 return `
                     <button 
-                    onclick="selectCountry('${c.code}')"
-                    class="relative group p-4 sm:p-5 rounded-3xl text-left transition-all duration-200 border-2 ${
-                        isSelected 
-                        ? 'bg-gradient-to-br from-lilac-500 to-tosca-500 text-white border-transparent shadow-lg shadow-lilac-200/90 -translate-y-0.5' 
-                        : 'bg-white hover:bg-lilac-50/50 text-slate-800 border-lilac-100 hover:border-lilac-300 shadow-sm'
-                    }"
-                >
-                    <div class="flex items-center justify-between gap-2 mb-2">
-                        <div class="font-display font-black text-base sm:text-lg leading-snug flex items-center gap-2">
-                            <span>${c.name}</span>
-                            ${c.flag}
+                        onclick="selectCountry('${c.code}')"
+                        class="relative group p-4 sm:p-5 rounded-3xl text-left transition-all duration-200 border-2 ${
+                            isSelected 
+                            ? 'bg-gradient-to-br from-lilac-500 to-tosca-500 text-white border-transparent shadow-lg shadow-lilac-200/90 -translate-y-0.5' 
+                            : 'bg-white hover:bg-lilac-50/50 text-slate-800 border-lilac-100 hover:border-lilac-300 shadow-sm'
+                        }"
+                    >
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <div class="font-display font-black text-base sm:text-lg leading-snug flex items-center gap-2">
+                                <span>${c.name}</span>
+                                ${c.flag}
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-between gap-2 mt-1">
-                        <span class="text-xs ${isSelected ? 'text-white/90' : 'text-slate-400'} font-semibold">${c.fullName}</span>
-                        ${isComingSoon 
-                            ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold tracking-wide ${
-                                isSelected ? 'bg-white/25 text-white' : 'bg-lilac-100 text-lilac-700'
-                              }">Coming Soon</span>`
-                            : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${
-                                isSelected ? 'bg-white/25 text-white' : 'bg-tosca-50 text-tosca-700 border border-tosca-100'
-                              }">${count} Batch</span>`
-                        }
-                    </div>
-                </button>
+                        <div class="flex items-center justify-between gap-2 mt-1">
+                            <span class="text-xs ${isSelected ? 'text-white/90' : 'text-slate-400'} font-semibold">${c.fullName}</span>
+                            ${isComingSoon 
+                                ? `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold tracking-wide ${
+                                    isSelected ? 'bg-white/25 text-white' : 'bg-lilac-100 text-lilac-700'
+                                  }">Coming Soon</span>`
+                                : `<span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${
+                                    isSelected ? 'bg-white/25 text-white' : 'bg-tosca-50 text-tosca-700 border border-tosca-100'
+                                  }">${count} Batch</span>`
+                            }
+                        </div>
+                    </button>
                 `;
             }).join('');
-        }
-
-        function renderAdminControls() {
-            const isAdmin = Boolean(state.user);
-            const banner = document.getElementById('admin-banner');
-            const controls = document.getElementById('admin-controls');
-            const footerBtn = document.getElementById('footer-admin-btn');
-
-            if (isAdmin) {
-                banner.classList.remove('hidden');
-                controls.classList.remove('hidden');
-                footerBtn.classList.add('hidden');
-                document.getElementById('admin-email-label').textContent = state.user.email || 'PICIQUW Owner';
-
-                const currentCountryObj = COUNTRIES.find(c => c.code === state.selectedCountry);
-                const isCS = state.comingSoonMap[state.selectedCountry];
-                document.getElementById('admin-current-country-label').textContent = `${currentCountryObj.name} (${currentCountryObj.fullName})`;
-                document.getElementById('toggle-coming-soon-text').textContent = isCS ? 'Aktifkan Negara Ini' : 'Set Coming Soon';
-            } else {
-                banner.classList.add('hidden');
-                controls.classList.add('hidden');
-                footerBtn.classList.remove('hidden');
-            }
         }
 
         function renderBatches() {
@@ -737,7 +1372,7 @@
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <div class="space-y-1.5">
                                 <div class="flex items-center gap-2.5">
-                                    <span class="text-xl">${countryObj.flag}</span>
+                                    ${countryObj.flag}
                                     <h3 class="font-display font-black text-xl text-slate-800 tracking-tight">${escapeHtml(batch.name)}</h3>
                                 </div>
                                 <p class="text-xs text-slate-400 font-medium flex items-center gap-1.5">
@@ -808,7 +1443,7 @@
                                         <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                                         <span>Edit</span>
                                     </button>
-                                    <button onclick="openDeleteModal('${batch.id}', '${escapeHtml(batch.name)}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 transition">
+                                    <button onclick="openDeleteModal('batch', '${batch.id}', '${escapeHtml(batch.name)}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 transition">
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </div>
@@ -836,30 +1471,6 @@
             return { classes: 'bg-tosca-100 text-tosca-700 border-tosca-200', dot: 'bg-tosca-500 animate-pulse' };
         }
 
-        function getFormattedTimestamp() {
-            const now = new Date();
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-        }
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const bg = type === 'error' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-white';
-            toast.className = `${bg} px-4 py-3.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2.5 pointer-events-auto transform transition-all duration-300`;
-            toast.innerHTML = `<span>${type === 'error' ? '⚠️' : '✨'}</span><span>${escapeHtml(message)}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.add('opacity-0', '-translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
         function selectCountry(code) {
             state.selectedCountry = code;
             state.statusFilter = 'ALL';
@@ -881,19 +1492,529 @@
             });
         }
 
-        function openModal(id) {
-            const el = document.getElementById(id);
-            el.classList.remove('hidden');
-            el.classList.add('flex');
+        // ==================== CUSTOMER BILLING & PAYMENT LOGIC ====================
+        function handleQuickInvoiceSearch(e) {
+            e.preventDefault();
+            const code = document.getElementById('home-invoice-input').value.trim().toUpperCase();
+            if (!code) return;
+            switchPage('billing');
+            document.getElementById('customer-invoice-code').value = code;
+            lookupInvoiceByCode(code);
         }
 
-        function closeModal(id) {
-            const el = document.getElementById(id);
-            el.classList.add('hidden');
-            el.classList.remove('flex');
+        async function handleSearchInvoice(e) {
+            e.preventDefault();
+            const code = document.getElementById('customer-invoice-code').value.trim().toUpperCase();
+            if (!code) return;
+            await lookupInvoiceByCode(code);
         }
 
-        // Admin Login & Logout
+        async function lookupInvoiceByCode(code) {
+            if (!sb) return;
+            const btn = document.getElementById('search-invoice-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Mencari...</span>';
+
+            document.getElementById('invoice-not-found').classList.add('hidden');
+            document.getElementById('customer-invoice-result').classList.add('hidden');
+
+            try {
+                const { data, error } = await sb
+                    .from('invoices')
+                    .select('*')
+                    .ilike('invoice_code', code)
+                    .maybeSingle();
+
+                if (error || !data) {
+                    state.activeCustomerInvoice = null;
+                    document.getElementById('invoice-not-found').classList.remove('hidden');
+                } else {
+                    state.activeCustomerInvoice = data;
+                    renderCustomerInvoiceResult();
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Gagal mencari kode tagihan.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="search" class="w-4 h-4"></i><span>Lihat Tagihan</span>';
+                lucide.createIcons();
+            }
+        }
+
+        function renderCustomerInvoiceResult() {
+            const inv = state.activeCustomerInvoice;
+            if (!inv) return;
+
+            document.getElementById('customer-invoice-result').classList.remove('hidden');
+            document.getElementById('inv-res-code').textContent = inv.invoice_code;
+            document.getElementById('inv-res-customer').textContent = inv.customer_name || '-';
+            document.getElementById('inv-res-batch').textContent = inv.batch_info || 'Pesanan PICIQUW';
+            document.getElementById('inv-res-items').textContent = inv.items_desc || '-';
+
+            const noteBox = document.getElementById('inv-res-note-box');
+            if (inv.admin_note) {
+                noteBox.classList.remove('hidden');
+                document.getElementById('inv-res-note').textContent = inv.admin_note;
+            } else {
+                noteBox.classList.add('hidden');
+            }
+
+            const formattedRp = formatRupiah(inv.amount);
+            document.getElementById('inv-res-amount').textContent = formattedRp;
+            document.getElementById('copy-amount-btn').onclick = () => copyText(String(inv.amount), `Nominal ${formattedRp} disalin!`);
+
+            // Status Badge
+            const badgeContainer = document.getElementById('inv-res-status-badge');
+            badgeContainer.innerHTML = getInvoiceStatusBadgeHtml(inv.status);
+
+            // Render QRIS & Payment Methods
+            const qrisImg = document.getElementById('qris-image-el');
+            const qrisPlaceholder = document.getElementById('qris-placeholder');
+            const qrisActions = document.getElementById('qris-actions');
+
+            if (state.paymentSettings.qris_url) {
+                qrisImg.src = state.paymentSettings.qris_url;
+                qrisImg.classList.remove('hidden');
+                qrisPlaceholder.classList.add('hidden');
+                qrisActions.classList.remove('hidden');
+                document.getElementById('qris-download-link').href = state.paymentSettings.qris_url;
+            } else {
+                qrisImg.classList.add('hidden');
+                qrisPlaceholder.classList.remove('hidden');
+                qrisActions.classList.add('hidden');
+            }
+
+            const methodsList = document.getElementById('other-payments-list');
+            const methods = state.paymentSettings.payment_methods || [];
+            if (methods.length === 0) {
+                methodsList.innerHTML = '<p class="text-xs text-slate-400 italic">Gunakan pembayaran QRIS di samping.</p>';
+            } else {
+                methodsList.innerHTML = methods.map(m => `
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3">
+                        <div>
+                            <span class="text-xs font-extrabold text-lilac-700 uppercase block">${escapeHtml(m.label)}</span>
+                            <span class="font-display font-black text-base text-slate-800 tracking-wide block">${escapeHtml(m.number)}</span>
+                            <span class="text-[11px] text-slate-500 font-semibold">a.n. ${escapeHtml(m.holder)}</span>
+                        </div>
+                        <button type="button" onclick="copyText('${escapeHtml(m.number)}', 'Nomor ${escapeHtml(m.label)} disalin!')" class="px-3 py-2 rounded-xl bg-white hover:bg-tosca-50 border border-slate-200 text-tosca-700 text-xs font-extrabold transition flex items-center gap-1.5 shrink-0">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('payment-instruction-note').textContent = state.paymentSettings.payment_note || '';
+
+            // Proof Upload / Verified State
+            const isVerified = inv.status === 'Lunas';
+            document.getElementById('proof-verified-box').classList.toggle('hidden', !isVerified);
+            document.getElementById('upload-proof-form').classList.toggle('hidden', isVerified);
+            document.getElementById('payment-methods-section').classList.toggle('hidden', isVerified);
+
+            if (isVerified && inv.proof_url) {
+                const viewBtn = document.getElementById('view-verified-proof-btn');
+                viewBtn.classList.remove('hidden');
+                viewBtn.onclick = () => openImageLightbox(inv.proof_url, `Bukti Lunas — ${inv.invoice_code}`);
+            } else if (isVerified) {
+                document.getElementById('view-verified-proof-btn').classList.add('hidden');
+            }
+
+            const existingBox = document.getElementById('existing-proof-box');
+            if (!isVerified && inv.proof_url) {
+                existingBox.classList.remove('hidden');
+                document.getElementById('existing-proof-thumb').src = inv.proof_url;
+                document.getElementById('existing-proof-time').textContent = `Diunggah pada: ${inv.paid_at || 'Baru saja'}`;
+                document.getElementById('existing-proof-note').textContent = inv.proof_note ? `"${inv.proof_note}"` : '';
+                document.getElementById('proof-file-label').textContent = 'Ganti gambar bukti pembayaran (jika perlu)';
+            } else {
+                existingBox.classList.add('hidden');
+                document.getElementById('proof-file-label').textContent = 'Klik untuk pilih gambar bukti pembayaran';
+            }
+
+            // Reset file picker
+            state.selectedProofFile = null;
+            document.getElementById('proof-file-input').value = '';
+            document.getElementById('proof-preview-container').classList.add('hidden');
+            document.getElementById('proof-sender-note').value = inv.proof_note || '';
+
+            lucide.createIcons();
+        }
+
+        function getInvoiceStatusBadgeHtml(status) {
+            if (status === 'Lunas') {
+                return `<span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-tosca-100 text-tosca-700 border border-tosca-200"><span class="w-2 h-2 rounded-full bg-tosca-500"></span>✅ Lunas</span>`;
+            }
+            if (status === 'Menunggu Verifikasi') {
+                return `<span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-lilac-100 text-lilac-700 border border-lilac-200"><span class="w-2 h-2 rounded-full bg-lilac-500 animate-pulse"></span>⏳ Menunggu Verifikasi</span>`;
+            }
+            if (status === 'Bukti Ditolak') {
+                return `<span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-rose-100 text-rose-700 border border-rose-200"><span class="w-2 h-2 rounded-full bg-rose-500"></span>⚠️ Bukti Ditolak — Unggah Ulang</span>`;
+            }
+            return `<span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800 border border-amber-200"><span class="w-2 h-2 rounded-full bg-amber-500"></span>💳 Belum Bayar</span>`;
+        }
+
+        function previewProofFile(e) {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            state.selectedProofFile = file;
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                document.getElementById('proof-preview-img').src = ev.target.result;
+                document.getElementById('proof-preview-container').classList.remove('hidden');
+                document.getElementById('proof-file-label').textContent = `File dipilih: ${file.name}`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function compressImageToBlob(file, maxWidth = 1000, quality = 0.8) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob((blob) => resolve(blob || file), 'image/jpeg', quality);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function handleUploadPaymentProof(e) {
+            e.preventDefault();
+            const inv = state.activeCustomerInvoice;
+            if (!inv || !sb) return;
+
+            if (!state.selectedProofFile) {
+                showToast('Silakan pilih gambar bukti pembayaran terlebih dahulu.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('submit-proof-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Mengunggah Bukti...</span>';
+
+            try {
+                const compressedBlob = await compressImageToBlob(state.selectedProofFile);
+                const filePath = `proofs/${inv.invoice_code}-${Date.now()}.jpg`;
+
+                const { error: uploadErr } = await sb.storage
+                    .from(STORAGE_BUCKET)
+                    .upload(filePath, compressedBlob, { contentType: 'image/jpeg', upsert: true });
+
+                if (uploadErr) throw uploadErr;
+
+                const { data: pubData } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
+                const publicUrl = pubData.publicUrl;
+                const senderNote = document.getElementById('proof-sender-note').value.trim();
+                const paidAt = getFormattedTimestamp();
+
+                const { error: updateErr } = await sb
+                    .from('invoices')
+                    .update({
+                        proof_url: publicUrl,
+                        proof_note: senderNote,
+                        paid_at: paidAt,
+                        status: 'Menunggu Verifikasi'
+                    })
+                    .eq('id', inv.id);
+
+                if (updateErr) throw updateErr;
+
+                showToast('Bukti pembayaran berhasil dikirim! Menunggu konfirmasi admin.');
+                await lookupInvoiceByCode(inv.invoice_code);
+                if (state.user) await fetchAllData();
+            } catch (err) {
+                console.error('Upload proof error:', err);
+                showToast('Gagal mengunggah bukti. Pastikan bucket Storage sudah dibuat.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i><span>Kirim Bukti Pembayaran</span>';
+                lucide.createIcons();
+            }
+        }
+
+        // ==================== ADMIN INVOICE & PAYMENT SETTINGS ====================
+        function setAdminInvoiceFilter(filter) {
+            state.adminInvoiceFilter = filter;
+            document.querySelectorAll('.inv-filter-pill').forEach(btn => {
+                btn.className = btn.dataset.invFilter === filter
+                    ? 'inv-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-lilac-500 text-white'
+                    : 'inv-filter-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600';
+            });
+            renderAdminInvoices();
+        }
+
+        function renderAdminInvoices() {
+            if (!state.user) return;
+            const container = document.getElementById('admin-invoice-list');
+            const query = (document.getElementById('admin-invoice-search')?.value || '').toLowerCase().trim();
+
+            const filtered = state.invoices.filter(inv => {
+                const matchStatus = state.adminInvoiceFilter === 'ALL' || inv.status === state.adminInvoiceFilter;
+                const matchSearch = !query ||
+                    inv.invoice_code.toLowerCase().includes(query) ||
+                    (inv.customer_name && inv.customer_name.toLowerCase().includes(query)) ||
+                    (inv.items_desc && inv.items_desc.toLowerCase().includes(query));
+                return matchStatus && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8 text-xs text-slate-400 font-semibold">Belum ada data tagihan pada filter ini.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(inv => {
+                const shareUrl = `${window.location.origin}${window.location.pathname}?kode=${encodeURIComponent(inv.invoice_code)}`;
+                return `
+                    <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col justify-between gap-4">
+                        <div class="space-y-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-display font-black text-base text-lilac-700 tracking-wider">${escapeHtml(inv.invoice_code)}</span>
+                                        <button onclick="copyText('${escapeHtml(inv.invoice_code)}', 'Kode ${escapeHtml(inv.invoice_code)} disalin!')" class="text-slate-400 hover:text-lilac-600" title="Salin Kode">
+                                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                        <button onclick="copyText('${escapeHtml(shareUrl)}', 'Link langsung tagihan disalin!')" class="text-slate-400 hover:text-tosca-600" title="Salin Link Langsung">
+                                            <i data-lucide="link" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-sm font-extrabold text-slate-800 mt-0.5">${escapeHtml(inv.customer_name)}</div>
+                                    <div class="text-[11px] text-slate-400 font-semibold">${escapeHtml(inv.batch_info || 'Pesanan PICIQUW')}</div>
+                                </div>
+                                ${getInvoiceStatusBadgeHtml(inv.status)}
+                            </div>
+
+                            <p class="text-xs text-slate-600 bg-white p-2.5 rounded-xl border border-slate-100 whitespace-pre-line">${escapeHtml(inv.items_desc)}</p>
+
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="font-display font-black text-base text-tosca-700">${formatRupiah(inv.amount)}</span>
+                                ${inv.proof_url ? `
+                                    <button onclick="openImageLightbox('${escapeHtml(inv.proof_url)}', 'Bukti Bayar — ${escapeHtml(inv.invoice_code)}')" class="px-3 py-1.5 rounded-xl bg-lilac-100 hover:bg-lilac-200 text-lilac-700 text-xs font-extrabold flex items-center gap-1.5">
+                                        <i data-lucide="image" class="w-3.5 h-3.5"></i> Lihat Bukti Bayar
+                                    </button>
+                                ` : '<span class="text-[11px] text-slate-400 italic">Belum ada bukti foto</span>'}
+                            </div>
+                            ${inv.proof_note ? `<div class="text-[11px] text-slate-500 italic">Catatan pengirim: "${escapeHtml(inv.proof_note)}"</div>` : ''}
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-200/70 flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-1.5">
+                                ${inv.status !== 'Lunas' ? `
+                                    <button onclick="quickUpdateInvoiceStatus('${inv.id}', 'Lunas')" class="px-3 py-1.5 rounded-xl bg-tosca-500 hover:bg-tosca-600 text-white text-xs font-extrabold transition">
+                                        ✅ Set Lunas
+                                    </button>
+                                ` : ''}
+                                ${inv.status === 'Menunggu Verifikasi' ? `
+                                    <button onclick="quickUpdateInvoiceStatus('${inv.id}', 'Bukti Ditolak')" class="px-3 py-1.5 rounded-xl bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold transition">
+                                        Tolak
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="openEditInvoiceModal('${inv.id}')" class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold">
+                                    Edit
+                                </button>
+                                <button onclick="openDeleteModal('invoice', '${inv.id}', '${escapeHtml(inv.invoice_code)}')" class="p-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function generateRandomInvoiceCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = 'PCQ-';
+            for (let i = 0; i < 4; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('inv-code-input').value = code;
+        }
+
+        function openInvoiceModal() {
+            document.getElementById('invoice-modal-title').textContent = 'Buat Kode Tagihan Baru';
+            document.getElementById('edit-invoice-id').value = '';
+            generateRandomInvoiceCode();
+            document.getElementById('inv-customer-input').value = '';
+            document.getElementById('inv-batch-input').value = '';
+            document.getElementById('inv-amount-input').value = '';
+            document.getElementById('inv-status-input').value = 'Belum Bayar';
+            document.getElementById('inv-items-input').value = '';
+            document.getElementById('inv-note-input').value = '';
+            openModal('invoice-modal');
+        }
+
+        function openEditInvoiceModal(id) {
+            const inv = state.invoices.find(i => i.id === id);
+            if (!inv) return;
+            document.getElementById('invoice-modal-title').textContent = 'Edit Tagihan Customer';
+            document.getElementById('edit-invoice-id').value = inv.id;
+            document.getElementById('inv-code-input').value = inv.invoice_code;
+            document.getElementById('inv-customer-input').value = inv.customer_name || '';
+            document.getElementById('inv-batch-input').value = inv.batch_info || '';
+            document.getElementById('inv-amount-input').value = inv.amount || 0;
+            document.getElementById('inv-status-input').value = inv.status || 'Belum Bayar';
+            document.getElementById('inv-items-input').value = inv.items_desc || '';
+            document.getElementById('inv-note-input').value = inv.admin_note || '';
+            openModal('invoice-modal');
+        }
+
+        async function handleSaveInvoice(e) {
+            e.preventDefault();
+            if (!state.user || !sb) return;
+
+            const id = document.getElementById('edit-invoice-id').value;
+            const payload = {
+                invoice_code: document.getElementById('inv-code-input').value.trim().toUpperCase(),
+                customer_name: document.getElementById('inv-customer-input').value.trim(),
+                batch_info: document.getElementById('inv-batch-input').value.trim(),
+                amount: Number(document.getElementById('inv-amount-input').value) || 0,
+                status: document.getElementById('inv-status-input').value,
+                items_desc: document.getElementById('inv-items-input').value.trim(),
+                admin_note: document.getElementById('inv-note-input').value.trim()
+            };
+
+            closeModal('invoice-modal');
+
+            const { error } = id
+                ? await sb.from('invoices').update(payload).eq('id', id)
+                : await sb.from('invoices').insert([payload]);
+
+            if (error) {
+                console.error(error);
+                showToast('Gagal menyimpan tagihan (pastikan kode unik).', 'error');
+            } else {
+                await fetchAllData();
+                showToast(`Tagihan ${payload.invoice_code} berhasil disimpan!`);
+            }
+        }
+
+        async function quickUpdateInvoiceStatus(id, newStatus) {
+            if (!state.user || !sb) return;
+            const { error } = await sb.from('invoices').update({ status: newStatus }).eq('id', id);
+            if (error) {
+                showToast('Gagal memperbarui status tagihan.', 'error');
+            } else {
+                await fetchAllData();
+                showToast(`Status tagihan diubah ke ${newStatus}`);
+            }
+        }
+
+        // Payment Settings Modal (QRIS & Bank/E-Wallet)
+        function openPaymentSettingsModal() {
+            document.getElementById('admin-qris-url').value = state.paymentSettings.qris_url || '';
+            document.getElementById('admin-payment-note').value = state.paymentSettings.payment_note || '';
+            syncAdminQrisPreview();
+
+            const listEl = document.getElementById('admin-payment-methods-list');
+            listEl.innerHTML = '';
+            const methods = state.paymentSettings.payment_methods || [];
+            if (methods.length === 0) {
+                addPaymentMethodRow();
+            } else {
+                methods.forEach(m => addPaymentMethodRow(m.label, m.number, m.holder));
+            }
+            openModal('payment-settings-modal');
+        }
+
+        function syncAdminQrisPreview() {
+            const url = document.getElementById('admin-qris-url').value.trim();
+            const img = document.getElementById('admin-qris-preview');
+            if (url) {
+                img.src = url;
+                img.classList.remove('hidden');
+            } else {
+                img.classList.add('hidden');
+            }
+        }
+
+        function addPaymentMethodRow(label = '', number = '', holder = '') {
+            const listEl = document.getElementById('admin-payment-methods-list');
+            const row = document.createElement('div');
+            row.className = 'payment-method-row grid grid-cols-12 gap-2 items-center bg-slate-50 p-2.5 rounded-2xl border border-slate-200';
+            row.innerHTML = `
+                <input type="text" placeholder="Bank/Wallet" value="${escapeHtml(label)}" class="pm-label col-span-3 px-2.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold">
+                <input type="text" placeholder="No. Rekening/HP" value="${escapeHtml(number)}" class="pm-number col-span-4 px-2.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold">
+                <input type="text" placeholder="Atas Nama" value="${escapeHtml(holder)}" class="pm-holder col-span-4 px-2.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-medium">
+                <button type="button" onclick="this.parentElement.remove()" class="col-span-1 p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg flex justify-center">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            `;
+            listEl.appendChild(row);
+            lucide.createIcons();
+        }
+
+        async function handleUploadAdminQris(e) {
+            const file = e.target.files?.[0];
+            if (!file || !sb || !state.user) return;
+
+            showToast('Mengunggah gambar QRIS...');
+            try {
+                const fileExt = file.name.split('.').pop() || 'png';
+                const filePath = `qris/qris-piciquw-${Date.now()}.${fileExt}`;
+                const { error } = await sb.storage.from(STORAGE_BUCKET).upload(filePath, file, { upsert: true });
+                if (error) throw error;
+
+                const { data: pubData } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
+                document.getElementById('admin-qris-url').value = pubData.publicUrl;
+                syncAdminQrisPreview();
+                showToast('Gambar QRIS siap! Klik Simpan Pengaturan.');
+            } catch (err) {
+                console.error(err);
+                showToast('Gagal upload gambar QRIS.', 'error');
+            }
+        }
+
+        async function handleSavePaymentSettings(e) {
+            e.preventDefault();
+            if (!state.user || !sb) return;
+
+            const methods = [];
+            document.querySelectorAll('.payment-method-row').forEach(row => {
+                const label = row.querySelector('.pm-label').value.trim();
+                const number = row.querySelector('.pm-number').value.trim();
+                const holder = row.querySelector('.pm-holder').value.trim();
+                if (label && number) methods.push({ label, number, holder });
+            });
+
+            const payload = {
+                id: 'default',
+                qris_url: document.getElementById('admin-qris-url').value.trim(),
+                payment_methods: methods,
+                payment_note: document.getElementById('admin-payment-note').value.trim()
+            };
+
+            const { error } = await sb.from('payment_settings').upsert(payload);
+            if (error) {
+                console.error(error);
+                showToast('Gagal menyimpan pengaturan pembayaran.', 'error');
+            } else {
+                closeModal('payment-settings-modal');
+                await fetchAllData();
+                showToast('Pengaturan QRIS & Rekening berhasil disimpan!');
+            }
+        }
+
+        // ==================== ADMIN AUTH & BATCH CRUD ====================
         function openLoginModal() {
             document.getElementById('admin-password-input').value = '';
             document.getElementById('login-error').classList.add('hidden');
@@ -903,7 +2024,7 @@
 
         async function handleAdminLogin(e) {
             e.preventDefault();
-            if (!sb) return showToast('Konfigurasi Supabase belum diisi.', 'error');
+            if (!sb) return;
 
             const email = document.getElementById('admin-email-input').value.trim();
             const password = document.getElementById('admin-password-input').value;
@@ -924,6 +2045,7 @@
                 errBox.classList.remove('hidden');
             } else {
                 closeModal('login-modal');
+                await fetchAllData();
                 showToast('Selamat datang kembali, Kak! Admin Mode aktif.');
             }
         }
@@ -931,10 +2053,10 @@
         async function logoutAdmin() {
             if (!sb) return;
             await sb.auth.signOut();
+            state.invoices = [];
             showToast('Berhasil keluar dari Admin Mode.');
         }
 
-        // CRUD Batches
         function openBatchModal() {
             document.getElementById('batch-modal-title').textContent = 'Tambah Batch Baru';
             document.getElementById('edit-batch-id').value = '';
@@ -1003,35 +2125,35 @@
             }
         }
 
-        let batchIdToDelete = null;
-        function openDeleteModal(id, name) {
-            batchIdToDelete = id;
-            document.getElementById('delete-modal-desc').textContent = `Apakah kamu yakin ingin menghapus "${name}"?`;
+        // Delete Modal (Shared for Batch & Invoice)
+        let deleteTarget = { type: null, id: null };
+        function openDeleteModal(type, id, label) {
+            deleteTarget = { type, id };
+            document.getElementById('delete-modal-desc').textContent = `Apakah kamu yakin ingin menghapus "${label}"?`;
             openModal('delete-modal');
         }
 
         document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
-            if (!state.user || !sb || !batchIdToDelete) return;
-            const targetId = batchIdToDelete;
-            batchIdToDelete = null;
+            if (!state.user || !sb || !deleteTarget.id) return;
+            const { type, id } = deleteTarget;
+            deleteTarget = { type: null, id: null };
             closeModal('delete-modal');
 
-            const { error } = await sb.from('batches').delete().eq('id', targetId);
+            const table = type === 'invoice' ? 'invoices' : 'batches';
+            const { error } = await sb.from(table).delete().eq('id', id);
             if (error) {
-                showToast('Gagal menghapus batch.', 'error');
+                showToast('Gagal menghapus data.', 'error');
             } else {
                 await fetchAllData();
-                showToast('Batch berhasil dihapus.');
+                showToast('Data berhasil dihapus.');
             }
         });
 
-        // Settings Coming Soon
+        // Country Settings
         async function toggleCountryComingSoon(countryCode = state.selectedCountry) {
             if (!state.user || !sb) return;
             const nextVal = !state.comingSoonMap[countryCode];
-            const { error } = await sb
-                .from('country_settings')
-                .upsert({ country: countryCode, coming_soon: nextVal });
+            const { error } = await sb.from('country_settings').upsert({ country: countryCode, coming_soon: nextVal });
 
             if (error) {
                 showToast('Gagal mengubah status negara.', 'error');
@@ -1055,7 +2177,7 @@
                 return `
                     <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
                         <div class="flex items-center gap-2.5 text-xs font-bold text-slate-700">
-                            <span class="text-base">${c.flag}</span>
+                            ${c.flag}
                             <span>${c.name} (${c.fullName})</span>
                         </div>
                         <button 
@@ -1070,6 +2192,57 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // Helpers
+        function formatRupiah(num) {
+            return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+        }
+
+        function getFormattedTimestamp() {
+            const now = new Date();
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        function copyText(text, successMsg = 'Disalin!') {
+            navigator.clipboard.writeText(text).then(() => showToast(successMsg));
+        }
+
+        function openModal(id) {
+            const el = document.getElementById(id);
+            el.classList.remove('hidden');
+            el.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+        }
+
+        function openImageLightbox(src, title = 'Preview Gambar') {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-title').textContent = title;
+            openModal('lightbox-modal');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bg = type === 'error' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-white';
+            toast.className = `${bg} px-4 py-3.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2.5 pointer-events-auto transform transition-all duration-300`;
+            toast.innerHTML = `<span>${type === 'error' ? '⚠️' : '✨'}</span><span>${escapeHtml(message)}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         window.addEventListener('DOMContentLoaded', initApp);
