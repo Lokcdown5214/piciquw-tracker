@@ -14,6 +14,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- SheetJS (Export Excel .xlsx) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -228,6 +230,9 @@
                         <button onclick="switchPage('billing'); openInvoiceModal();" class="px-4 py-2.5 rounded-2xl bg-lilac-600 hover:bg-lilac-700 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
                             <i data-lucide="plus-circle" class="w-4 h-4"></i> Buat Kode Tagihan
                         </button>
+                        <button onclick="switchPage('billing'); openExportModal();" class="px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Export Laporan
+                        </button>
                         <button onclick="switchPage('tracker'); openBatchModal();" class="px-4 py-2.5 rounded-2xl bg-tosca-500 hover:bg-tosca-600 text-white text-xs font-extrabold transition flex items-center gap-1.5 shadow-sm">
                             <i data-lucide="package-plus" class="w-4 h-4"></i> Tambah Batch
                         </button>
@@ -299,12 +304,12 @@
                                 Cek Tagihan Customer
                             </h2>
                             <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
-                                Masukkan kode tagihan untuk lihat rincian biaya, bayar via <strong>QRIS / Transfer</strong>, unggah bukti, dan akses <strong>link checkout packing Shopee</strong> setelah lunas.
+                                Masukkan kode tagihan untuk lihat rincian biaya, bayar via <strong>QRIS / Transfer</strong> (bebas denda 3 hari), dan akses <strong>link checkout packing Shopee</strong> setelah lunas.
                             </p>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-2 pt-1 text-xs font-bold text-slate-600">
-                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">1. Bayar &amp; Upload Bukti</span>
+                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">1. Bayar (&le;3 Hari)</span>
                             <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">2. Verifikasi Lunas</span>
                             <span class="px-3 py-1 rounded-xl bg-orange-50 border border-orange-200 text-orange-700">3. CO Packing Shopee</span>
                         </div>
@@ -505,9 +510,13 @@
                                 <i data-lucide="receipt" class="w-5 h-5 text-tosca-500"></i>
                                 <span>Kelola Tagihan Customer (Admin)</span>
                             </h2>
-                            <p class="text-sm text-slate-500">Buat kode tagihan, verifikasi bukti bayar, dan atur link checkout packing Shopee tiap customer.</p>
+                            <p class="text-sm text-slate-500">Denda Rp 2.000/hari otomatis dihitung jika lewat 3 hari dari input sampai diset <strong>Lunas</strong>.</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2.5">
+                            <button onclick="openExportModal()" class="px-4 py-2.5 rounded-2xl text-xs font-extrabold border-2 border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition flex items-center gap-2">
+                                <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                                <span>Export Excel / CSV</span>
+                            </button>
                             <button onclick="openPaymentSettingsModal()" class="px-4 py-2.5 rounded-2xl text-xs font-bold border-2 border-tosca-200 bg-tosca-50 hover:bg-tosca-100 text-tosca-700 transition flex items-center gap-2">
                                 <i data-lucide="qr-code" class="w-4 h-4"></i>
                                 <span>Atur QRIS &amp; Rekening</span>
@@ -604,6 +613,14 @@
                             <span class="block text-xs font-bold text-slate-400">Batch / Kategori Pesanan</span>
                             <span id="inv-res-batch" class="font-extrabold text-slate-800 text-base mt-0.5 block">-</span>
                         </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <span class="block text-xs font-bold text-slate-400">Tanggal Tagihan Dibuat</span>
+                            <span id="inv-res-created" class="font-extrabold text-slate-700 text-sm mt-0.5 block">-</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <span class="block text-xs font-bold text-slate-400">Batas Bayar Tanpa Denda (3 Hari)</span>
+                            <span id="inv-res-deadline" class="font-extrabold text-slate-700 text-sm mt-0.5 block">-</span>
+                        </div>
                     </div>
 
                     <div class="p-4 sm:p-5 rounded-2xl bg-lilac-50/50 border border-lilac-100 space-y-1.5">
@@ -615,11 +632,75 @@
                         <strong class="font-extrabold">Catatan Admin:</strong> <span id="inv-res-note"></span>
                     </div>
 
+                    <!-- LIVE COUNTDOWN BOX (When NOT overdue and NOT yet Lunas) -->
+                    <div id="inv-grace-info-box" class="hidden p-5 rounded-3xl bg-gradient-to-br from-tosca-50 via-emerald-50/70 to-lilac-50/70 border-2 border-tosca-200 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-tosca-800">
+                                <span class="w-2.5 h-2.5 rounded-full bg-tosca-500 animate-ping"></span>
+                                <span>Sisa Waktu Bebas Denda</span>
+                            </div>
+                            <span id="inv-countdown-urgency-badge" class="px-3 py-1 rounded-full bg-tosca-100 text-tosca-800 text-[11px] font-extrabold">
+                                Aman &bull; Denda Rp 0
+                            </span>
+                        </div>
+
+                        <!-- 4-Block Live Countdown Digits -->
+                        <div class="grid grid-cols-4 gap-2.5 sm:gap-3 text-center">
+                            <div class="bg-white/95 rounded-2xl py-3 px-2 border border-tosca-200/80 shadow-xs">
+                                <div id="cd-days" class="font-display text-2xl sm:text-3xl font-black text-tosca-700 leading-none">00</div>
+                                <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mt-1">Hari</div>
+                            </div>
+                            <div class="bg-white/95 rounded-2xl py-3 px-2 border border-tosca-200/80 shadow-xs">
+                                <div id="cd-hours" class="font-display text-2xl sm:text-3xl font-black text-tosca-700 leading-none">00</div>
+                                <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mt-1">Jam</div>
+                            </div>
+                            <div class="bg-white/95 rounded-2xl py-3 px-2 border border-tosca-200/80 shadow-xs">
+                                <div id="cd-minutes" class="font-display text-2xl sm:text-3xl font-black text-tosca-700 leading-none">00</div>
+                                <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mt-1">Menit</div>
+                            </div>
+                            <div class="bg-white/95 rounded-2xl py-3 px-2 border border-tosca-200/80 shadow-xs">
+                                <div id="cd-seconds" class="font-display text-2xl sm:text-3xl font-black text-lilac-600 leading-none">00</div>
+                                <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mt-1">Detik</div>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-tosca-900 leading-relaxed text-center sm:text-left">
+                            Selesaikan pembayaran &amp; tunggu konfirmasi lunas sebelum <strong id="inv-grace-deadline-inline">-</strong>. Jika melewati waktu tersebut, dikenakan denda keterlambatan <strong>Rp 2.000 / hari</strong> hingga dinyatakan lunas oleh admin.
+                        </p>
+                    </div>
+
+                    <!-- Late Fee Breakdown Box (Shown whenever lateDays > 0) -->
+                    <div id="inv-penalty-box" class="hidden p-5 rounded-2xl bg-rose-50/90 border-2 border-rose-200 space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-rose-700">
+                                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                                <span>Rincian Denda Keterlambatan (&gt; 3 Hari)</span>
+                            </span>
+                            <span id="inv-penalty-days-badge" class="px-3 py-1 rounded-full bg-rose-600 text-white text-xs font-extrabold">Terlambat 0 Hari</span>
+                        </div>
+
+                        <div class="space-y-1.5 text-xs sm:text-sm text-slate-700 bg-white/90 p-3.5 rounded-xl border border-rose-100">
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium text-slate-500">Tagihan Awal Pesanan</span>
+                                <span id="inv-base-amount-text" class="font-bold text-slate-800">Rp 0</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium text-rose-700">Denda (<span id="inv-penalty-calc-label">0 hari × Rp 2.000</span>)</span>
+                                <span id="inv-penalty-amount-text" class="font-extrabold text-rose-600">+ Rp 0</span>
+                            </div>
+                        </div>
+
+                        <p id="inv-penalty-status-note" class="text-[11px] text-rose-700 font-medium leading-relaxed">
+                            Denda Rp 2.000/hari terus berjalan sampai pembayaran dikonfirmasi <strong>Lunas</strong> oleh admin.
+                        </p>
+                    </div>
+
                     <!-- Total Amount Box -->
                     <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-lilac-600 via-purple-600 to-tosca-500 text-white flex flex-wrap items-center justify-between gap-4 shadow-lg shadow-lilac-200">
                         <div>
                             <span class="text-xs font-bold uppercase tracking-wider text-white/80">Total Tagihan Pembayaran</span>
                             <div id="inv-res-amount" class="font-display text-3xl sm:text-4xl font-black mt-0.5">Rp 0</div>
+                            <div id="inv-res-amount-sub" class="hidden text-xs text-white/90 font-semibold mt-1"></div>
                         </div>
                         <button id="copy-amount-btn" type="button" class="px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/30 text-white text-xs font-extrabold transition flex items-center gap-2 backdrop-blur-xs">
                             <i data-lucide="copy" class="w-4 h-4"></i>
@@ -676,7 +757,7 @@
                             <i data-lucide="wallet" class="w-5 h-5 text-tosca-500"></i>
                             <span>Pilih Metode Pembayaran</span>
                         </h3>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Silakan lakukan pembayaran sesuai nominal total tagihan melalui QRIS atau rekening di bawah ini.</p>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Silakan lakukan pembayaran sesuai nominal total tagihan (termasuk denda jika melewati 3 hari) melalui QRIS atau rekening di bawah ini.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
@@ -959,7 +1040,7 @@
                     </div>
                     <div>
                         <h3 id="invoice-modal-title" class="font-display font-extrabold text-lg text-slate-800">Buat Kode Tagihan Baru</h3>
-                        <p class="text-xs text-slate-400 font-medium">Customer cek tagihan &amp; upload bukti dengan kode ini</p>
+                        <p class="text-xs text-slate-400 font-medium">Denda Rp 2.000/hari aktif setelah lewat 3 hari dari input</p>
                     </div>
                 </div>
                 <button onclick="closeModal('invoice-modal')" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400 transition">
@@ -993,7 +1074,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Total Tagihan (Rp)</label>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Tagihan Awal (Rp)</label>
                         <input type="number" id="inv-amount-input" min="0" step="100" placeholder="150000" required class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm font-extrabold text-slate-800">
                     </div>
                     <div>
@@ -1005,6 +1086,12 @@
                             <option value="Bukti Ditolak">⚠️ Bukti Ditolak</option>
                         </select>
                     </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Waktu Input Tagihan (Acuan 3 Hari Bebas Denda)</label>
+                    <input type="datetime-local" id="inv-created-at-input" required class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-xs sm:text-sm font-bold text-slate-700">
+                    <p class="text-[11px] text-slate-400 mt-1">Jika lewat 3 hari dari waktu ini dan belum diset Lunas, otomatis kena denda Rp 2.000/hari.</p>
                 </div>
 
                 <div>
@@ -1024,7 +1111,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1.5">Catatan untuk Customer (Opsional)</label>
-                    <input type="text" id="inv-note-input" placeholder="Contoh: Pelunasan maksimal 28 Nov 2026" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm text-slate-700">
+                    <input type="text" id="inv-note-input" placeholder="Contoh: Pelunasan maksimal 3 hari sejak tagihan dikirim" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm text-slate-700">
                 </div>
 
                 <div class="flex items-center gap-3 pt-2">
@@ -1035,7 +1122,7 @@
         </div>
     </div>
 
-    <!-- 3B. Confirm Lunas + Input Shopee Packing Link Modal (Admin) -->
+    <!-- 3B. Confirm Lunas + Penalty Summary + Input Shopee Packing Link Modal (Admin) -->
     <div id="confirm-lunas-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
         <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border-2 border-tosca-200">
             <div class="flex items-center justify-between mb-5">
@@ -1055,6 +1142,23 @@
 
             <form onsubmit="handleConfirmLunasSubmit(event)" class="space-y-4">
                 <input type="hidden" id="lunas-invoice-id">
+
+                <!-- Penalty & Final Total Breakdown -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span>Tagihan Awal</span>
+                        <span id="lunas-base-amount" class="font-bold text-slate-800">Rp 0</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span id="lunas-penalty-label">Denda Keterlambatan (0 hari)</span>
+                        <span id="lunas-penalty-amount" class="font-bold text-rose-600">Rp 0</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-sm">
+                        <span class="font-extrabold text-slate-800">Total Final Lunas</span>
+                        <span id="lunas-total-amount" class="font-display font-black text-base text-tosca-700">Rp 0</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Perhitungan denda otomatis berhenti saat tombol Set Lunas diklik.</p>
+                </div>
 
                 <div class="p-4 rounded-2xl bg-orange-50/80 border border-orange-200 space-y-2">
                     <label for="lunas-shopee-link-input" class="block text-xs font-extrabold text-orange-800 flex items-center gap-1.5">
@@ -1079,6 +1183,85 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- 3C. Export Laporan Tagihan & Denda Modal (Admin) -->
+    <div id="export-report-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border-2 border-emerald-200">
+            <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                        <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-extrabold text-lg text-slate-800">Export Laporan Tagihan</h3>
+                        <p class="text-xs text-slate-400 font-medium">Unduh rekap tagihan &amp; denda customer PICIQUW</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('export-report-modal')" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Scope Selection -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-extrabold text-slate-600">Pilih Cakupan Data</label>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="export-scope" value="ALL" class="peer sr-only" checked onchange="updateExportModalSummary()">
+                            <div class="p-3 rounded-2xl border-2 border-slate-200 bg-slate-50/70 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition">
+                                <div class="text-xs font-extrabold text-slate-800 peer-checked:text-emerald-800">Semua Tagihan</div>
+                                <div id="export-all-count-label" class="text-[11px] text-slate-500 mt-0.5">0 data</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="export-scope" value="FILTERED" class="peer sr-only" onchange="updateExportModalSummary()">
+                            <div class="p-3 rounded-2xl border-2 border-slate-200 bg-slate-50/70 peer-checked:border-lilac-500 peer-checked:bg-lilac-50 transition">
+                                <div class="text-xs font-extrabold text-slate-800 peer-checked:text-lilac-800">Sesuai Filter Aktif</div>
+                                <div id="export-filtered-count-label" class="text-[11px] text-slate-500 mt-0.5">0 data</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Live Export Summary -->
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span>Jumlah Tagihan</span>
+                        <span id="export-sum-count" class="font-extrabold text-slate-800">0 tagihan</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span>Total Tagihan Awal</span>
+                        <span id="export-sum-base" class="font-bold text-slate-800">Rp 0</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-600">
+                        <span>Total Denda Keterlambatan</span>
+                        <span id="export-sum-penalty" class="font-bold text-rose-600">Rp 0</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-sm">
+                        <span class="font-extrabold text-slate-800">Total Keseluruhan</span>
+                        <span id="export-sum-total" class="font-display font-black text-base text-emerald-700">Rp 0</span>
+                    </div>
+                </div>
+
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                    File laporan mencakup rincian pesanan, status bayar, hari terlambat, denda Rp 2.000/hari, link Shopee, dan baris rekap total di bagian akhir.
+                </p>
+
+                <!-- Download Format Buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <button type="button" onclick="exportInvoicesToCSV()" class="py-3.5 px-4 rounded-2xl bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        <span>Download CSV (.csv)</span>
+                    </button>
+                    <button type="button" onclick="exportInvoicesToExcel()" class="py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-tosca-500 hover:from-emerald-600 hover:to-tosca-600 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2">
+                        <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                        <span>Download Excel (.xlsx)</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1194,6 +1377,11 @@
         const SUPABASE_URL = "https://cwpyhgasbmauesacdiag.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_ouDVGuaX-Ogc8zFBPXryhA_CoBNWK46";
         const STORAGE_BUCKET = "piciquw-uploads";
+
+        // Konfigurasi Denda Keterlambatan
+        const GRACE_PERIOD_DAYS = 3;
+        const LATE_FEE_PER_DAY = 2000;
+        const DAY_IN_MS = 24 * 60 * 60 * 1000;
         // =========================================
 
         const COUNTRIES = [
@@ -1225,6 +1413,7 @@
         };
 
         let sb = null;
+        let countdownInterval = null;
 
         async function initApp() {
             document.getElementById('year').textContent = new Date().getFullYear();
@@ -1242,6 +1431,7 @@
 
             await fetchAllData();
             setupRealtimeSubscriptions();
+            startCountdownTicker();
 
             // Check URL params (?page=tracker / ?page=billing / ?kode=PCQ-XXXX)
             const params = new URLSearchParams(window.location.search);
@@ -1286,13 +1476,11 @@
                     };
                 }
 
-                // Fetch all invoices if Admin is logged in
                 if (state.user) {
                     const invRes = await sb.from('invoices').select('*').order('created_at', { ascending: false });
                     if (invRes.data) state.invoices = invRes.data;
                 }
 
-                // Refresh active customer invoice if currently open
                 if (state.activeCustomerInvoice) {
                     const fresh = await sb.from('invoices').select('*').eq('invoice_code', state.activeCustomerInvoice.invoice_code).maybeSingle();
                     if (fresh.data) {
@@ -1316,6 +1504,106 @@
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => fetchAllData())
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'payment_settings' }, () => fetchAllData())
                 .subscribe();
+        }
+
+        // ==================== LIVE COUNTDOWN & PENALTY ENGINE ====================
+        function getRemainingParts(deadlineMs, nowMs = Date.now()) {
+            const diff = Math.max(0, deadlineMs - nowMs);
+            const days = Math.floor(diff / DAY_IN_MS);
+            const hours = Math.floor((diff % DAY_IN_MS) / (60 * 60 * 1000));
+            const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+            const seconds = Math.floor((diff % (60 * 1000)) / 1000);
+            return { diff, days, hours, minutes, seconds };
+        }
+
+        function startCountdownTicker() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                const nowMs = Date.now();
+
+                const inv = state.activeCustomerInvoice;
+                if (inv && inv.status !== 'Lunas') {
+                    const startMs = inv.created_at ? new Date(inv.created_at).getTime() : nowMs;
+                    const deadlineMs = startMs + GRACE_PERIOD_DAYS * DAY_IN_MS;
+                    const graceVisible = !document.getElementById('inv-grace-info-box').classList.contains('hidden');
+
+                    if (graceVisible) {
+                        if (nowMs >= deadlineMs) {
+                            renderCustomerInvoiceResult();
+                        } else {
+                            updateCustomerCountdownDOM(deadlineMs, nowMs);
+                        }
+                    }
+                }
+
+                if (state.user) {
+                    document.querySelectorAll('[data-admin-cd-deadline]').forEach(el => {
+                        const dl = Number(el.dataset.adminCdDeadline);
+                        if (!dl) return;
+                        if (nowMs >= dl) {
+                            renderAdminInvoices();
+                        } else {
+                            const p = getRemainingParts(dl, nowMs);
+                            el.textContent = `⏳ Sisa ${p.days}h ${String(p.hours).padStart(2, '0')}j ${String(p.minutes).padStart(2, '0')}m ${String(p.seconds).padStart(2, '0')}d`;
+                        }
+                    });
+                }
+            }, 1000);
+        }
+
+        function updateCustomerCountdownDOM(deadlineMs, nowMs = Date.now()) {
+            const p = getRemainingParts(deadlineMs, nowMs);
+            document.getElementById('cd-days').textContent = String(p.days).padStart(2, '0');
+            document.getElementById('cd-hours').textContent = String(p.hours).padStart(2, '0');
+            document.getElementById('cd-minutes').textContent = String(p.minutes).padStart(2, '0');
+            document.getElementById('cd-seconds').textContent = String(p.seconds).padStart(2, '0');
+
+            const badge = document.getElementById('inv-countdown-urgency-badge');
+            const box = document.getElementById('inv-grace-info-box');
+            if (p.diff <= DAY_IN_MS) {
+                badge.textContent = '⚠️ Segera Bayar! < 24 Jam';
+                badge.className = 'px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold animate-pulse';
+                box.className = 'p-5 rounded-3xl bg-gradient-to-br from-amber-50 via-orange-50/70 to-lilac-50/70 border-2 border-amber-300 space-y-4';
+            } else {
+                badge.textContent = 'Aman • Denda Rp 0';
+                badge.className = 'px-3 py-1 rounded-full bg-tosca-100 text-tosca-800 text-[11px] font-extrabold';
+                box.className = 'p-5 rounded-3xl bg-gradient-to-br from-tosca-50 via-emerald-50/70 to-lilac-50/70 border-2 border-tosca-200 space-y-4';
+            }
+        }
+
+        function calculateInvoicePenalty(inv) {
+            const baseAmount = Number(inv.amount || 0);
+            const startMs = inv.created_at ? new Date(inv.created_at).getTime() : Date.now();
+            const graceMs = GRACE_PERIOD_DAYS * DAY_IN_MS;
+            const deadlineMs = startMs + graceMs;
+            const deadlineDate = new Date(deadlineMs);
+
+            const isLunas = inv.status === 'Lunas';
+            const endMs = (isLunas && inv.lunas_at)
+                ? new Date(inv.lunas_at).getTime()
+                : Date.now();
+
+            const elapsedMs = Math.max(0, endMs - startMs);
+            let lateDays = 0;
+
+            if (elapsedMs > graceMs) {
+                lateDays = Math.ceil((elapsedMs - graceMs) / DAY_IN_MS);
+            }
+
+            const penalty = lateDays * LATE_FEE_PER_DAY;
+            const totalAmount = baseAmount + penalty;
+
+            return {
+                baseAmount,
+                lateDays,
+                penalty,
+                totalAmount,
+                startDate: new Date(startMs),
+                deadlineMs,
+                deadlineDate,
+                lunasDate: (isLunas && inv.lunas_at) ? new Date(inv.lunas_at) : null,
+                isOverdue: lateDays > 0
+            };
         }
 
         // Page Switching
@@ -1646,10 +1934,15 @@
             const inv = state.activeCustomerInvoice;
             if (!inv) return;
 
+            const calc = calculateInvoicePenalty(inv);
+            const isVerified = inv.status === 'Lunas';
+
             document.getElementById('customer-invoice-result').classList.remove('hidden');
             document.getElementById('inv-res-code').textContent = inv.invoice_code;
             document.getElementById('inv-res-customer').textContent = inv.customer_name || '-';
             document.getElementById('inv-res-batch').textContent = inv.batch_info || 'Pesanan PICIQUW';
+            document.getElementById('inv-res-created').textContent = formatDisplayDateTime(calc.startDate);
+            document.getElementById('inv-res-deadline').textContent = formatDisplayDateTime(calc.deadlineDate);
             document.getElementById('inv-res-items').textContent = inv.items_desc || '-';
 
             const noteBox = document.getElementById('inv-res-note-box');
@@ -1660,15 +1953,48 @@
                 noteBox.classList.add('hidden');
             }
 
-            const formattedRp = formatRupiah(inv.amount);
-            document.getElementById('inv-res-amount').textContent = formattedRp;
-            document.getElementById('copy-amount-btn').onclick = () => copyText(String(inv.amount), `Nominal ${formattedRp} disalin!`);
+            const graceBox = document.getElementById('inv-grace-info-box');
+            const penaltyBox = document.getElementById('inv-penalty-box');
 
-            // Status Badge
-            const badgeContainer = document.getElementById('inv-res-status-badge');
-            badgeContainer.innerHTML = getInvoiceStatusBadgeHtml(inv.status);
+            if (calc.isOverdue) {
+                graceBox.classList.add('hidden');
+                penaltyBox.classList.remove('hidden');
+                document.getElementById('inv-penalty-days-badge').textContent = `Terlambat ${calc.lateDays} Hari`;
+                document.getElementById('inv-base-amount-text').textContent = formatRupiah(calc.baseAmount);
+                document.getElementById('inv-penalty-calc-label').textContent = `${calc.lateDays} hari × ${formatRupiah(LATE_FEE_PER_DAY)}`;
+                document.getElementById('inv-penalty-amount-text').textContent = `+ ${formatRupiah(calc.penalty)}`;
 
-            // Render QRIS & Payment Methods
+                const statusNoteEl = document.getElementById('inv-penalty-status-note');
+                if (isVerified && calc.lunasDate) {
+                    statusNoteEl.innerHTML = `Perhitungan denda dihentikan pada <strong>${formatDisplayDateTime(calc.lunasDate)}</strong> saat pembayaran dikonfirmasi <strong>Lunas</strong> oleh admin.`;
+                } else {
+                    statusNoteEl.innerHTML = `Denda <strong>Rp 2.000/hari</strong> terus dikalkulasikan secara otomatis sampai pembayaran dikonfirmasi <strong>Lunas</strong> oleh admin.`;
+                }
+            } else {
+                penaltyBox.classList.add('hidden');
+                if (!isVerified) {
+                    graceBox.classList.remove('hidden');
+                    document.getElementById('inv-grace-deadline-inline').textContent = formatDisplayDateTime(calc.deadlineDate);
+                    updateCustomerCountdownDOM(calc.deadlineMs);
+                } else {
+                    graceBox.classList.add('hidden');
+                }
+            }
+
+            const formattedTotalRp = formatRupiah(calc.totalAmount);
+            document.getElementById('inv-res-amount').textContent = formattedTotalRp;
+
+            const subAmountEl = document.getElementById('inv-res-amount-sub');
+            if (calc.isOverdue) {
+                subAmountEl.classList.remove('hidden');
+                subAmountEl.textContent = `Tagihan awal ${formatRupiah(calc.baseAmount)} + denda ${calc.lateDays} hari (${formatRupiah(calc.penalty)})`;
+            } else {
+                subAmountEl.classList.add('hidden');
+            }
+
+            document.getElementById('copy-amount-btn').onclick = () => copyText(String(calc.totalAmount), `Total nominal ${formattedTotalRp} disalin!`);
+            document.getElementById('inv-res-status-badge').innerHTML = getInvoiceStatusBadgeHtml(inv.status);
+
             const qrisImg = document.getElementById('qris-image-el');
             const qrisPlaceholder = document.getElementById('qris-placeholder');
             const qrisActions = document.getElementById('qris-actions');
@@ -1706,8 +2032,6 @@
 
             document.getElementById('payment-instruction-note').textContent = state.paymentSettings.payment_note || '';
 
-            // Proof Upload / Verified State + Shopee Checkout Packing Link
-            const isVerified = inv.status === 'Lunas';
             document.getElementById('proof-verified-box').classList.toggle('hidden', !isVerified);
             document.getElementById('upload-proof-form').classList.toggle('hidden', isVerified);
             document.getElementById('payment-methods-section').classList.toggle('hidden', isVerified);
@@ -1753,7 +2077,6 @@
                 document.getElementById('proof-file-label').textContent = 'Klik untuk pilih gambar bukti pembayaran';
             }
 
-            // Reset file picker
             state.selectedProofFile = null;
             document.getElementById('proof-file-input').value = '';
             document.getElementById('proof-preview-container').classList.add('hidden');
@@ -1868,7 +2191,7 @@
             }
         }
 
-        // ==================== ADMIN INVOICE & PAYMENT SETTINGS ====================
+        // ==================== ADMIN INVOICE, EXPORT & PAYMENT SETTINGS ====================
         function setAdminInvoiceFilter(filter) {
             state.adminInvoiceFilter = filter;
             document.querySelectorAll('.inv-filter-pill').forEach(btn => {
@@ -1879,19 +2202,23 @@
             renderAdminInvoices();
         }
 
-        function renderAdminInvoices() {
-            if (!state.user) return;
-            const container = document.getElementById('admin-invoice-list');
+        function getFilteredAdminInvoices() {
             const query = (document.getElementById('admin-invoice-search')?.value || '').toLowerCase().trim();
-
-            const filtered = state.invoices.filter(inv => {
+            return state.invoices.filter(inv => {
                 const matchStatus = state.adminInvoiceFilter === 'ALL' || inv.status === state.adminInvoiceFilter;
                 const matchSearch = !query ||
                     inv.invoice_code.toLowerCase().includes(query) ||
                     (inv.customer_name && inv.customer_name.toLowerCase().includes(query)) ||
+                    (inv.batch_info && inv.batch_info.toLowerCase().includes(query)) ||
                     (inv.items_desc && inv.items_desc.toLowerCase().includes(query));
                 return matchStatus && matchSearch;
             });
+        }
+
+        function renderAdminInvoices() {
+            if (!state.user) return;
+            const container = document.getElementById('admin-invoice-list');
+            const filtered = getFilteredAdminInvoices();
 
             if (filtered.length === 0) {
                 container.innerHTML = '<div class="col-span-full text-center py-8 text-xs text-slate-400 font-semibold">Belum ada data tagihan pada filter ini.</div>';
@@ -1901,9 +2228,13 @@
             container.innerHTML = filtered.map(inv => {
                 const shareUrl = `${window.location.origin}${window.location.pathname}?kode=${encodeURIComponent(inv.invoice_code)}`;
                 const hasShopee = Boolean(inv.shopee_link && inv.shopee_link.trim());
+                const calc = calculateInvoicePenalty(inv);
+                const isLunas = inv.status === 'Lunas';
+                const p = (!isLunas && !calc.isOverdue) ? getRemainingParts(calc.deadlineMs) : null;
+
                 return `
                     <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col justify-between gap-4">
-                        <div class="space-y-2">
+                        <div class="space-y-2.5">
                             <div class="flex items-start justify-between gap-2">
                                 <div>
                                     <div class="flex items-center gap-2">
@@ -1916,24 +2247,40 @@
                                         </button>
                                     </div>
                                     <div class="text-sm font-extrabold text-slate-800 mt-0.5">${escapeHtml(inv.customer_name)}</div>
-                                    <div class="text-[11px] text-slate-400 font-semibold">${escapeHtml(inv.batch_info || 'Pesanan PICIQUW')}</div>
+                                    <div class="text-[11px] text-slate-400 font-semibold">${escapeHtml(inv.batch_info || 'Pesanan PICIQUW')} &bull; Input: ${formatDisplayDateTime(calc.startDate)}</div>
                                 </div>
                                 ${getInvoiceStatusBadgeHtml(inv.status)}
                             </div>
 
                             <p class="text-xs text-slate-600 bg-white p-2.5 rounded-xl border border-slate-100 whitespace-pre-line">${escapeHtml(inv.items_desc)}</p>
 
-                            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-                                <span class="font-display font-black text-base text-tosca-700">${formatRupiah(inv.amount)}</span>
-                                ${inv.proof_url ? `
-                                    <button onclick="openImageLightbox('${escapeHtml(inv.proof_url)}', 'Bukti Bayar — ${escapeHtml(inv.invoice_code)}')" class="px-3 py-1.5 rounded-xl bg-lilac-100 hover:bg-lilac-200 text-lilac-700 text-xs font-extrabold flex items-center gap-1.5">
-                                        <i data-lucide="image" class="w-3.5 h-3.5"></i> Lihat Bukti Bayar
-                                    </button>
-                                ` : '<span class="text-[11px] text-slate-400 italic">Belum ada bukti foto</span>'}
+                            <!-- Amount + Live Countdown / Penalty Breakdown -->
+                            <div class="p-3 rounded-xl bg-white border border-slate-200/80 space-y-1">
+                                <div class="flex items-center justify-between gap-2">
+                                    <div>
+                                        <span class="font-display font-black text-base text-tosca-700 block">${formatRupiah(calc.totalAmount)}</span>
+                                        ${calc.isOverdue ? `
+                                            <span class="text-[11px] font-bold text-rose-600 block">
+                                                Awal ${formatRupiah(calc.baseAmount)} + Denda ${calc.lateDays} hr (${formatRupiah(calc.penalty)})
+                                            </span>
+                                        ` : (!isLunas && p ? `
+                                            <span data-admin-cd-deadline="${calc.deadlineMs}" class="text-[11px] font-bold text-tosca-600 block">
+                                                ⏳ Sisa ${p.days}h ${String(p.hours).padStart(2, '0')}j ${String(p.minutes).padStart(2, '0')}m ${String(p.seconds).padStart(2, '0')}d
+                                            </span>
+                                        ` : `
+                                            <span class="text-[11px] text-slate-400 block">Lunas tanpa denda</span>
+                                        `)}
+                                    </div>
+                                    ${inv.proof_url ? `
+                                        <button onclick="openImageLightbox('${escapeHtml(inv.proof_url)}', 'Bukti Bayar — ${escapeHtml(inv.invoice_code)}')" class="px-3 py-1.5 rounded-xl bg-lilac-100 hover:bg-lilac-200 text-lilac-700 text-xs font-extrabold flex items-center gap-1.5 shrink-0">
+                                            <i data-lucide="image" class="w-3.5 h-3.5"></i> Bukti Bayar
+                                        </button>
+                                    ` : '<span class="text-[11px] text-slate-400 italic">Belum ada bukti</span>'}
+                                </div>
                             </div>
 
                             <!-- Shopee Packing Link Badge on Admin Card -->
-                            <div class="pt-1">
+                            <div>
                                 ${hasShopee ? `
                                     <div class="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-orange-50 border border-orange-200 text-[11px] text-orange-800">
                                         <span class="font-bold truncate flex items-center gap-1.5">
@@ -1981,6 +2328,236 @@
             lucide.createIcons();
         }
 
+        // ==================== EXPORT EXCEL (.XLSX) & CSV (.CSV) ====================
+        function openExportModal() {
+            if (!state.user) return;
+            if (state.invoices.length === 0) {
+                showToast('Belum ada data tagihan untuk diexport.', 'error');
+                return;
+            }
+            const allCount = state.invoices.length;
+            const filteredCount = getFilteredAdminInvoices().length;
+
+            document.getElementById('export-all-count-label').textContent = `${allCount} data tagihan`;
+            document.getElementById('export-filtered-count-label').textContent = `${filteredCount} data tagihan`;
+
+            const allRadio = document.querySelector('input[name="export-scope"][value="ALL"]');
+            if (allRadio) allRadio.checked = true;
+
+            updateExportModalSummary();
+            openModal('export-report-modal');
+        }
+
+        function getExportTargetInvoices() {
+            const scope = document.querySelector('input[name="export-scope"]:checked')?.value || 'ALL';
+            return scope === 'FILTERED' ? getFilteredAdminInvoices() : state.invoices;
+        }
+
+        function updateExportModalSummary() {
+            const target = getExportTargetInvoices();
+            let sumBase = 0;
+            let sumPenalty = 0;
+            let sumTotal = 0;
+
+            target.forEach(inv => {
+                const calc = calculateInvoicePenalty(inv);
+                sumBase += calc.baseAmount;
+                sumPenalty += calc.penalty;
+                sumTotal += calc.totalAmount;
+            });
+
+            document.getElementById('export-sum-count').textContent = `${target.length} tagihan`;
+            document.getElementById('export-sum-base').textContent = formatRupiah(sumBase);
+            document.getElementById('export-sum-penalty').textContent = formatRupiah(sumPenalty);
+            document.getElementById('export-sum-total').textContent = formatRupiah(sumTotal);
+        }
+
+        function buildExportDataset(invoices) {
+            let sumBase = 0;
+            let sumPenalty = 0;
+            let sumTotal = 0;
+            let sumLateDays = 0;
+
+            const rows = invoices.map((inv, index) => {
+                const calc = calculateInvoicePenalty(inv);
+                sumBase += calc.baseAmount;
+                sumPenalty += calc.penalty;
+                sumTotal += calc.totalAmount;
+                sumLateDays += calc.lateDays;
+
+                return {
+                    'No': index + 1,
+                    'Kode Tagihan': inv.invoice_code || '',
+                    'Nama Customer': inv.customer_name || '',
+                    'Batch / Kategori': inv.batch_info || 'Pesanan PICIQUW',
+                    'Rincian Pesanan': (inv.items_desc || '').replace(/\r?\n/g, ' | '),
+                    'Status Pembayaran': inv.status || 'Belum Bayar',
+                    'Waktu Input Tagihan': formatDisplayDateTime(calc.startDate),
+                    'Batas Bebas Denda (3 Hari)': formatDisplayDateTime(calc.deadlineDate),
+                    'Waktu Lunas': calc.lunasDate ? formatDisplayDateTime(calc.lunasDate) : '-',
+                    'Keterlambatan (Hari)': calc.lateDays,
+                    'Tagihan Awal (Rp)': calc.baseAmount,
+                    'Denda Keterlambatan (Rp)': calc.penalty,
+                    'Total Tagihan (Rp)': calc.totalAmount,
+                    'Link Checkout Shopee': inv.shopee_link || '-',
+                    'Catatan Pengirim': inv.proof_note || '-',
+                    'Catatan Admin': inv.admin_note || '-',
+                    'Link Bukti Bayar': inv.proof_url || '-'
+                };
+            });
+
+            rows.push({
+                'No': '',
+                'Kode Tagihan': 'TOTAL KESELURUHAN',
+                'Nama Customer': `${invoices.length} Tagihan`,
+                'Batch / Kategori': '',
+                'Rincian Pesanan': '',
+                'Status Pembayaran': '',
+                'Waktu Input Tagihan': '',
+                'Batas Bebas Denda (3 Hari)': '',
+                'Waktu Lunas': '',
+                'Keterlambatan (Hari)': sumLateDays,
+                'Tagihan Awal (Rp)': sumBase,
+                'Denda Keterlambatan (Rp)': sumPenalty,
+                'Total Tagihan (Rp)': sumTotal,
+                'Link Checkout Shopee': '',
+                'Catatan Pengirim': '',
+                'Catatan Admin': '',
+                'Link Bukti Bayar': ''
+            });
+
+            return { rows, sumBase, sumPenalty, sumTotal };
+        }
+
+        function getExportFilename(ext) {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            return `Laporan-Tagihan-PICIQUW-${yyyy}-${mm}-${dd}.${ext}`;
+        }
+
+        function exportInvoicesToExcel() {
+            const target = getExportTargetInvoices();
+            if (target.length === 0) {
+                showToast('Tidak ada data tagihan pada cakupan yang dipilih.', 'error');
+                return;
+            }
+
+            if (typeof window.XLSX === 'undefined') {
+                showToast('Library Excel belum siap, dialihkan ke download CSV...');
+                exportInvoicesToCSV();
+                return;
+            }
+
+            const { rows, sumBase, sumPenalty, sumTotal } = buildExportDataset(target);
+            const wb = XLSX.utils.book_new();
+
+            // Sheet 1: Detail Laporan Tagihan & Denda
+            const wsDetail = XLSX.utils.json_to_sheet(rows);
+            wsDetail['!cols'] = [
+                { wch: 5 },  // No
+                { wch: 16 }, // Kode Tagihan
+                { wch: 24 }, // Nama Customer
+                { wch: 22 }, // Batch / Kategori
+                { wch: 40 }, // Rincian Pesanan
+                { wch: 22 }, // Status Pembayaran
+                { wch: 22 }, // Waktu Input Tagihan
+                { wch: 24 }, // Batas Bebas Denda
+                { wch: 22 }, // Waktu Lunas
+                { wch: 20 }, // Keterlambatan (Hari)
+                { wch: 18 }, // Tagihan Awal
+                { wch: 22 }, // Denda Keterlambatan
+                { wch: 20 }, // Total Tagihan
+                { wch: 32 }, // Link Shopee
+                { wch: 25 }, // Catatan Pengirim
+                { wch: 25 }, // Catatan Admin
+                { wch: 32 }  // Link Bukti Bayar
+            ];
+            XLSX.utils.book_append_sheet(wb, wsDetail, 'Laporan Tagihan & Denda');
+
+            // Sheet 2: Rekap Berdasarkan Status
+            const statuses = ['Lunas', 'Menunggu Verifikasi', 'Belum Bayar', 'Bukti Ditolak'];
+            const recapRows = statuses.map(st => {
+                const items = target.filter(i => i.status === st);
+                let base = 0, pen = 0, tot = 0;
+                items.forEach(i => {
+                    const c = calculateInvoicePenalty(i);
+                    base += c.baseAmount;
+                    pen += c.penalty;
+                    tot += c.totalAmount;
+                });
+                return {
+                    'Status Pembayaran': st,
+                    'Jumlah Tagihan': items.length,
+                    'Total Tagihan Awal (Rp)': base,
+                    'Total Denda (Rp)': pen,
+                    'Total Keseluruhan (Rp)': tot
+                };
+            });
+            recapRows.push({
+                'Status Pembayaran': 'TOTAL SEMUA STATUS',
+                'Jumlah Tagihan': target.length,
+                'Total Tagihan Awal (Rp)': sumBase,
+                'Total Denda (Rp)': sumPenalty,
+                'Total Keseluruhan (Rp)': sumTotal
+            });
+
+            const wsRecap = XLSX.utils.json_to_sheet(recapRows);
+            wsRecap['!cols'] = [
+                { wch: 24 },
+                { wch: 18 },
+                { wch: 24 },
+                { wch: 20 },
+                { wch: 24 }
+            ];
+            XLSX.utils.book_append_sheet(wb, wsRecap, 'Rekap Status');
+
+            XLSX.writeFile(wb, getExportFilename('xlsx'));
+            closeModal('export-report-modal');
+            showToast(`Laporan Excel (${target.length} tagihan) berhasil diunduh!`);
+        }
+
+        function exportInvoicesToCSV() {
+            const target = getExportTargetInvoices();
+            if (target.length === 0) {
+                showToast('Tidak ada data tagihan pada cakupan yang dipilih.', 'error');
+                return;
+            }
+
+            const { rows } = buildExportDataset(target);
+            const headers = Object.keys(rows[0]);
+
+            const escapeCsvCell = (val) => {
+                const str = val === null || val === undefined ? '' : String(val);
+                if (/[",\r\n;]/.test(str)) {
+                    return `"${str.replace(/"/g, '""')}"`;
+                }
+                return str;
+            };
+
+            const csvLines = [
+                headers.map(escapeCsvCell).join(','),
+                ...rows.map(row => headers.map(h => escapeCsvCell(row[h])).join(','))
+            ];
+
+            // Tambahkan UTF-8 BOM agar Excel langsung membaca karakter & kolom dengan rapi
+            const csvContent = '\uFEFF' + csvLines.join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = getExportFilename('csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            closeModal('export-report-modal');
+            showToast(`Laporan CSV (${target.length} tagihan) berhasil diunduh!`);
+        }
+
         function copyInvoiceShopeeLink(id) {
             const inv = state.invoices.find(i => i.id === id);
             if (!inv || !inv.shopee_link) return;
@@ -1996,6 +2573,12 @@
             document.getElementById('inv-code-input').value = code;
         }
 
+        function toLocalDatetimeInputValue(dateObj) {
+            const d = dateObj instanceof Date ? dateObj : new Date(dateObj);
+            const pad = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
         function openInvoiceModal() {
             document.getElementById('invoice-modal-title').textContent = 'Buat Kode Tagihan Baru';
             document.getElementById('edit-invoice-id').value = '';
@@ -2004,6 +2587,7 @@
             document.getElementById('inv-batch-input').value = '';
             document.getElementById('inv-amount-input').value = '';
             document.getElementById('inv-status-input').value = 'Belum Bayar';
+            document.getElementById('inv-created-at-input').value = toLocalDatetimeInputValue(new Date());
             document.getElementById('inv-items-input').value = '';
             document.getElementById('inv-shopee-link-input').value = '';
             document.getElementById('inv-note-input').value = '';
@@ -2020,6 +2604,7 @@
             document.getElementById('inv-batch-input').value = inv.batch_info || '';
             document.getElementById('inv-amount-input').value = inv.amount || 0;
             document.getElementById('inv-status-input').value = inv.status || 'Belum Bayar';
+            document.getElementById('inv-created-at-input').value = toLocalDatetimeInputValue(inv.created_at ? new Date(inv.created_at) : new Date());
             document.getElementById('inv-items-input').value = inv.items_desc || '';
             document.getElementById('inv-shopee-link-input').value = inv.shopee_link || '';
             document.getElementById('inv-note-input').value = inv.admin_note || '';
@@ -2031,17 +2616,37 @@
             if (!state.user || !sb) return;
 
             const id = document.getElementById('edit-invoice-id').value;
+            const existingInv = id ? state.invoices.find(i => i.id === id) : null;
             const rawShopee = document.getElementById('inv-shopee-link-input').value.trim();
+            const createdInputVal = document.getElementById('inv-created-at-input').value;
+            const createdAtIso = createdInputVal ? new Date(createdInputVal).toISOString() : new Date().toISOString();
+            const newStatus = document.getElementById('inv-status-input').value;
+
             const payload = {
                 invoice_code: document.getElementById('inv-code-input').value.trim().toUpperCase(),
                 customer_name: document.getElementById('inv-customer-input').value.trim(),
                 batch_info: document.getElementById('inv-batch-input').value.trim(),
                 amount: Number(document.getElementById('inv-amount-input').value) || 0,
-                status: document.getElementById('inv-status-input').value,
+                status: newStatus,
+                created_at: createdAtIso,
                 items_desc: document.getElementById('inv-items-input').value.trim(),
                 shopee_link: rawShopee ? normalizeUrl(rawShopee) : '',
                 admin_note: document.getElementById('inv-note-input').value.trim()
             };
+
+            if (newStatus === 'Lunas') {
+                const lunasTimestamp = (existingInv && existingInv.status === 'Lunas' && existingInv.lunas_at)
+                    ? existingInv.lunas_at
+                    : new Date().toISOString();
+                const previewCalc = calculateInvoicePenalty({ ...payload, lunas_at: lunasTimestamp });
+                payload.lunas_at = lunasTimestamp;
+                payload.late_days = previewCalc.lateDays;
+                payload.penalty_amount = previewCalc.penalty;
+            } else {
+                payload.lunas_at = null;
+                payload.late_days = 0;
+                payload.penalty_amount = 0;
+            }
 
             closeModal('invoice-modal');
 
@@ -2051,7 +2656,7 @@
 
             if (error) {
                 console.error(error);
-                showToast('Gagal menyimpan tagihan (pastikan kode unik & kolom shopee_link ada).', 'error');
+                showToast('Gagal menyimpan tagihan (pastikan kode unik & kolom SQL sudah dibuat).', 'error');
             } else {
                 await fetchAllData();
                 showToast(`Tagihan ${payload.invoice_code} berhasil disimpan!`);
@@ -2061,8 +2666,14 @@
         function openConfirmLunasModal(id) {
             const inv = state.invoices.find(i => i.id === id);
             if (!inv) return;
+            const calc = calculateInvoicePenalty(inv);
+
             document.getElementById('lunas-invoice-id').value = inv.id;
             document.getElementById('lunas-modal-subtitle').textContent = `${inv.invoice_code} • ${inv.customer_name}`;
+            document.getElementById('lunas-base-amount').textContent = formatRupiah(calc.baseAmount);
+            document.getElementById('lunas-penalty-label').textContent = `Denda Keterlambatan (${calc.lateDays} hari)`;
+            document.getElementById('lunas-penalty-amount').textContent = calc.penalty > 0 ? `+ ${formatRupiah(calc.penalty)}` : 'Rp 0';
+            document.getElementById('lunas-total-amount').textContent = formatRupiah(calc.totalAmount);
             document.getElementById('lunas-shopee-link-input').value = inv.shopee_link || '';
             openModal('confirm-lunas-modal');
         }
@@ -2072,9 +2683,19 @@
             if (!state.user || !sb) return;
 
             const id = document.getElementById('lunas-invoice-id').value;
+            const inv = state.invoices.find(i => i.id === id);
             const rawShopee = document.getElementById('lunas-shopee-link-input').value.trim();
+            const nowIso = new Date().toISOString();
+
+            const finalCalc = inv
+                ? calculateInvoicePenalty({ ...inv, status: 'Lunas', lunas_at: nowIso })
+                : { lateDays: 0, penalty: 0 };
+
             const payload = {
                 status: 'Lunas',
+                lunas_at: nowIso,
+                late_days: finalCalc.lateDays,
+                penalty_amount: finalCalc.penalty,
                 shopee_link: rawShopee ? normalizeUrl(rawShopee) : ''
             };
 
@@ -2086,13 +2707,19 @@
                 showToast('Gagal mengonfirmasi Lunas.', 'error');
             } else {
                 await fetchAllData();
-                showToast('Tagihan dikonfirmasi Lunas! Link Shopee siap diakses customer.');
+                showToast('Tagihan dikonfirmasi Lunas! Perhitungan denda dihentikan & link Shopee siap.');
             }
         }
 
         async function quickUpdateInvoiceStatus(id, newStatus) {
             if (!state.user || !sb) return;
-            const { error } = await sb.from('invoices').update({ status: newStatus }).eq('id', id);
+            const updateData = { status: newStatus };
+            if (newStatus !== 'Lunas') {
+                updateData.lunas_at = null;
+                updateData.late_days = 0;
+                updateData.penalty_amount = 0;
+            }
+            const { error } = await sb.from('invoices').update(updateData).eq('id', id);
             if (error) {
                 showToast('Gagal memperbarui status tagihan.', 'error');
             } else {
@@ -2388,10 +3015,14 @@
             return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
         }
 
-        function getFormattedTimestamp() {
-            const now = new Date();
+        function formatDisplayDateTime(dateObj) {
+            if (!dateObj || isNaN(dateObj.getTime())) return '-';
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            return `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            return `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}, ${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function getFormattedTimestamp() {
+            return formatDisplayDateTime(new Date());
         }
 
         function escapeHtml(str) {
