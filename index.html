@@ -467,7 +467,7 @@
             </div>
 
             <!-- Batch Cards List -->
-            <div id="batch-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+            <div id="batch-list" class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start"></div>
 
             <!-- Empty State -->
             <div id="empty-state" class="hidden clean-card rounded-3xl p-12 text-center">
@@ -1369,60 +1369,62 @@
 
                 return `
                     <article class="clean-card rounded-3xl p-6 sm:p-7 transition-all duration-200 hover:-translate-y-0.5 flex flex-col justify-between gap-5">
-                        <div class="flex flex-wrap items-start justify-between gap-3">
-                            <div class="space-y-1.5">
-                                <div class="flex items-center gap-2.5">
-                                    ${countryObj.flag}
-                                    <h3 class="font-display font-black text-xl text-slate-800 tracking-tight">${escapeHtml(batch.name)}</h3>
+                        <div class="space-y-5">
+                            <div class="flex flex-wrap items-start justify-between gap-3">
+                                <div class="space-y-1.5">
+                                    <div class="flex items-center gap-2.5">
+                                        ${countryObj.flag}
+                                        <h3 class="font-display font-black text-xl text-slate-800 tracking-tight">${escapeHtml(batch.name)}</h3>
+                                    </div>
+                                    <p class="text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                                        <i data-lucide="clock" class="w-3.5 h-3.5 text-lilac-400"></i>
+                                        <span>Diperbarui: ${escapeHtml(batch.updated_at || 'Baru saja')}</span>
+                                    </p>
                                 </div>
-                                <p class="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-                                    <i data-lucide="clock" class="w-3.5 h-3.5 text-lilac-400"></i>
-                                    <span>Diperbarui: ${escapeHtml(batch.updated_at || 'Baru saja')}</span>
-                                </p>
+
+                                <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-extrabold border ${badgeStyle.classes}">
+                                    <span class="w-2 h-2 rounded-full ${badgeStyle.dot}"></span>
+                                    <span>${escapeHtml(batch.status)}</span>
+                                </span>
                             </div>
 
-                            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-extrabold border ${badgeStyle.classes}">
-                                <span class="w-2 h-2 rounded-full ${badgeStyle.dot}"></span>
-                                <span>${escapeHtml(batch.status)}</span>
-                            </span>
-                        </div>
+                            <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-100">
+                                <div class="grid grid-cols-4 gap-2 sm:gap-3">
+                                    ${stepsMeta.map(s => {
+                                        const isCompleted = currentStep > s.num;
+                                        const isCurrent = currentStep === s.num;
+                                        let circleClass = 'bg-slate-200 text-slate-400';
+                                        let labelClass = 'text-slate-400 font-semibold';
+                                        
+                                        if (isCompleted) {
+                                            circleClass = 'bg-tosca-400 text-white';
+                                            labelClass = 'text-slate-600 font-bold';
+                                        } else if (isCurrent) {
+                                            circleClass = `${s.activeBg} text-white ring-4 ${s.ring}`;
+                                            labelClass = `${s.activeText} font-extrabold`;
+                                        }
 
-                        <div class="bg-slate-50/90 p-4 sm:p-5 rounded-2xl border border-slate-100">
-                            <div class="grid grid-cols-4 gap-2 sm:gap-3">
-                                ${stepsMeta.map(s => {
-                                    const isCompleted = currentStep > s.num;
-                                    const isCurrent = currentStep === s.num;
-                                    let circleClass = 'bg-slate-200 text-slate-400';
-                                    let labelClass = 'text-slate-400 font-semibold';
-                                    
-                                    if (isCompleted) {
-                                        circleClass = 'bg-tosca-400 text-white';
-                                        labelClass = 'text-slate-600 font-bold';
-                                    } else if (isCurrent) {
-                                        circleClass = `${s.activeBg} text-white ring-4 ${s.ring}`;
-                                        labelClass = `${s.activeText} font-extrabold`;
-                                    }
-
-                                    return `
-                                        <div class="flex flex-col items-center text-center gap-2">
-                                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all ${circleClass}">
-                                                ${isCompleted ? '<i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>' : `<span>${s.emoji}</span>`}
+                                        return `
+                                            <div class="flex flex-col items-center text-center gap-2">
+                                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all ${circleClass}">
+                                                    ${isCompleted ? '<i data-lucide="check" class="w-4 h-4 stroke-[3]"></i>' : `<span>${s.emoji}</span>`}
+                                                </div>
+                                                <span class="text-[11px] sm:text-xs leading-tight ${labelClass}">
+                                                    ${s.label}
+                                                </span>
                                             </div>
-                                            <span class="text-[11px] sm:text-xs leading-tight ${labelClass}">
-                                                ${s.label}
-                                            </span>
-                                        </div>
-                                    `;
-                                }).join('')}
+                                        `;
+                                    }).join('')}
+                                </div>
                             </div>
-                        </div>
 
-                        ${batch.note ? `
-                            <div class="text-sm text-slate-700 bg-lilac-50/60 border border-lilac-100 rounded-2xl p-4 leading-relaxed">
-                                <span class="block text-[11px] font-extrabold uppercase tracking-wider text-lilac-600 mb-1">Catatan Update:</span>
-                                ${escapeHtml(batch.note)}
-                            </div>
-                        ` : ''}
+                            ${batch.note ? `
+                                <div class="text-sm text-slate-700 bg-lilac-50/60 border border-lilac-100 rounded-2xl p-4 leading-relaxed">
+                                    <span class="block text-[11px] font-extrabold uppercase tracking-wider text-lilac-600 mb-1">Catatan Update:</span>
+                                    ${escapeHtml(batch.note)}
+                                </div>
+                            ` : ''}
+                        </div>
 
                         ${isAdmin ? `
                             <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
