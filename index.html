@@ -290,7 +290,7 @@
                                 💳
                             </div>
                             <span class="px-3.5 py-1.5 rounded-full bg-tosca-50 text-tosca-700 border border-tosca-200 text-xs font-extrabold">
-                                QRIS &amp; Transfer
+                                QRIS &amp; Checkout Shopee
                             </span>
                         </div>
 
@@ -299,14 +299,14 @@
                                 Cek Tagihan Customer
                             </h2>
                             <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
-                                Punya kode tagihan dari admin? Masukkan kodemu untuk melihat rincian biaya, scan <strong>QRIS</strong> / rekening tujuan, dan unggah bukti bayar.
+                                Masukkan kode tagihan untuk lihat rincian biaya, bayar via <strong>QRIS / Transfer</strong>, unggah bukti, dan akses <strong>link checkout packing Shopee</strong> setelah lunas.
                             </p>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-2 pt-1 text-xs font-bold text-slate-600">
-                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">1. Input Kode</span>
-                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">2. Scan QRIS / TF</span>
-                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">3. Upload Bukti</span>
+                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">1. Bayar &amp; Upload Bukti</span>
+                            <span class="px-3 py-1 rounded-xl bg-tosca-50/70 border border-tosca-100 text-tosca-700">2. Verifikasi Lunas</span>
+                            <span class="px-3 py-1 rounded-xl bg-orange-50 border border-orange-200 text-orange-700">3. CO Packing Shopee</span>
                         </div>
                     </div>
 
@@ -327,7 +327,7 @@
                             <i data-lucide="ticket" class="w-5 h-5 text-tosca-500"></i>
                             <span>Langsung Cek Kode Tagihanmu</span>
                         </h3>
-                        <p class="text-xs sm:text-sm text-slate-500">Ketik kode tagihan yang diberikan admin untuk langsung membuka halaman pembayaran.</p>
+                        <p class="text-xs sm:text-sm text-slate-500">Ketik kode tagihan yang diberikan admin untuk membuka halaman pembayaran atau link checkout Shopee.</p>
                     </div>
                     <form onsubmit="handleQuickInvoiceSearch(event)" class="flex w-full md:w-auto gap-2.5">
                         <input 
@@ -486,13 +486,13 @@
             <div class="text-center max-w-2xl mx-auto">
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border-2 border-tosca-200 text-xs font-extrabold text-tosca-700 mb-4 shadow-sm tracking-wide">
                     <i data-lucide="shield-check" class="w-3.5 h-3.5 text-tosca-500"></i>
-                    <span>PEMBAYARAN &amp; KONFIRMASI TAGIHAN</span>
+                    <span>PEMBAYARAN &amp; CHECKOUT PACKING SHOPEE</span>
                 </div>
                 <h1 class="font-display text-3xl sm:text-5xl font-black tracking-wide bg-gradient-to-r from-tosca-500 via-teal-500 to-lilac-600 bg-clip-text text-transparent pb-2">
                     Cek Tagihan Customer
                 </h1>
                 <p class="text-slate-600 text-sm sm:text-base mt-1 font-medium leading-relaxed">
-                    Masukkan kode tagihan dari admin untuk melihat rincian pesanan, scan QRIS / transfer, dan kirim bukti pembayaran 🧾✨
+                    Masukkan kode tagihan untuk membayar via QRIS / transfer, kirim bukti bayar, dan dapatkan link <strong>checkout packing Shopee</strong> setelah tagihanmu lunas 🧾✨
                 </p>
             </div>
 
@@ -505,7 +505,7 @@
                                 <i data-lucide="receipt" class="w-5 h-5 text-tosca-500"></i>
                                 <span>Kelola Tagihan Customer (Admin)</span>
                             </h2>
-                            <p class="text-sm text-slate-500">Buat kode tagihan baru, atur metode QRIS/rekening, dan verifikasi bukti bayar.</p>
+                            <p class="text-sm text-slate-500">Buat kode tagihan, verifikasi bukti bayar, dan atur link checkout packing Shopee tiap customer.</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2.5">
                             <button onclick="openPaymentSettingsModal()" class="px-4 py-2.5 rounded-2xl text-xs font-bold border-2 border-tosca-200 bg-tosca-50 hover:bg-tosca-100 text-tosca-700 transition flex items-center gap-2">
@@ -628,6 +628,47 @@
                     </div>
                 </div>
 
+                <!-- SHOPEE CHECKOUT PACKING CARD (Automatically appears ONLY when status === 'Lunas') -->
+                <div id="shopee-packing-box" class="hidden clean-card rounded-3xl p-6 sm:p-8 border-2 border-orange-300 bg-gradient-to-br from-orange-50 via-amber-50/60 to-white space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-rose-500 text-white flex items-center justify-center text-2xl shadow-md shadow-orange-200 shrink-0">
+                            🛍️
+                        </div>
+                        <div class="space-y-1 flex-1">
+                            <span class="inline-block px-3 py-0.5 rounded-full bg-orange-100 text-orange-700 text-[11px] font-extrabold uppercase tracking-wider">
+                                Tahap Berikutnya &bull; Checkout Packing
+                            </span>
+                            <h3 class="font-display text-xl sm:text-2xl font-black text-slate-800">
+                                Link Checkout Packing Shopee
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                Tagihan kamu sudah dikonfirmasi <strong>Lunas</strong>! Silakan checkout biaya packing &amp; pengiriman lokal melalui link Shopee khusus pesananmu di bawah ini:
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Ready State (Link provided by admin) -->
+                    <div id="shopee-link-ready" class="hidden pt-2 space-y-3">
+                        <div class="p-3.5 rounded-2xl bg-white border border-orange-200 flex items-center justify-between gap-2 text-xs text-slate-600">
+                            <span id="shopee-link-display" class="truncate font-semibold text-orange-700">https://shopee.co.id/...</span>
+                            <button type="button" id="copy-shopee-link-btn" class="px-3 py-1.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 font-extrabold shrink-0 transition flex items-center gap-1">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin Link
+                            </button>
+                        </div>
+                        <a id="customer-shopee-btn" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-orange-200 transition flex items-center justify-center gap-2.5">
+                            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                            <span>Buka Link Checkout Packing Shopee</span>
+                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+
+                    <!-- Pending Link State (Lunas, but admin hasn't pasted link yet) -->
+                    <div id="shopee-link-pending" class="hidden p-4 rounded-2xl bg-white/90 border border-orange-200 text-xs sm:text-sm text-slate-600 flex items-center gap-3">
+                        <i data-lucide="clock" class="w-5 h-5 text-orange-500 shrink-0"></i>
+                        <span>Admin sedang menyiapkan link checkout packing Shopee khusus untuk pesananmu. Silakan cek halaman ini kembali sebentar lagi ya ✨</span>
+                    </div>
+                </div>
+
                 <!-- 2. Payment Methods Card (QRIS & Bank/E-Wallet) -->
                 <div id="payment-methods-section" class="clean-card rounded-3xl p-6 sm:p-8 space-y-6">
                     <div>
@@ -696,7 +737,7 @@
                         </div>
                         <div class="flex-1 text-center sm:text-left">
                             <h4 class="font-display font-black text-base text-tosca-800">Pembayaran Sudah Dikonfirmasi Lunas!</h4>
-                            <p class="text-xs text-tosca-700 mt-0.5">Terima kasih sudah melakukan pembayaran. Pesananmu sedang diproses sesuai jadwal batch ✨</p>
+                            <p class="text-xs text-tosca-700 mt-0.5">Terima kasih sudah melakukan pembayaran. Jangan lupa lanjutkan checkout packing Shopee di atas ya ✨</p>
                         </div>
                         <button id="view-verified-proof-btn" type="button" class="px-4 py-2 rounded-xl bg-white border border-tosca-200 text-tosca-700 text-xs font-extrabold hover:bg-tosca-100 transition">
                             Lihat Bukti Bayar
@@ -971,6 +1012,16 @@
                     <textarea id="inv-items-input" rows="3" required placeholder="Contoh:&#10;- 1x Album Photobook Ver. A (Rp 120.000)&#10;- EMS & Tax Sharing (Rp 30.000)" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm text-slate-700 resize-none leading-relaxed"></textarea>
                 </div>
 
+                <!-- Shopee Checkout Packing Link Input -->
+                <div class="p-4 rounded-2xl bg-orange-50/70 border border-orange-200 space-y-1.5">
+                    <label class="block text-xs font-extrabold text-orange-800 flex items-center gap-1.5">
+                        <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-orange-600"></i>
+                        <span>Link Checkout Packing Shopee (Khusus Customer Ini)</span>
+                    </label>
+                    <input type="text" id="inv-shopee-link-input" placeholder="https://shopee.co.id/..." class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-orange-200 focus:border-orange-500 outline-none text-xs sm:text-sm font-medium text-slate-700">
+                    <p class="text-[11px] text-orange-700">Link ini otomatis tampil di halaman customer hanya setelah status diubah ke <strong>Lunas</strong>.</p>
+                </div>
+
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1.5">Catatan untuk Customer (Opsional)</label>
                     <input type="text" id="inv-note-input" placeholder="Contoh: Pelunasan maksimal 28 Nov 2026" class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-lilac-500 outline-none text-sm text-slate-700">
@@ -979,6 +1030,53 @@
                 <div class="flex items-center gap-3 pt-2">
                     <button type="button" onclick="closeModal('invoice-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">Batal</button>
                     <button type="submit" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-lilac-500 to-tosca-500 hover:from-lilac-600 hover:to-tosca-600 text-white font-extrabold text-sm shadow-md shadow-lilac-200 transition">Simpan Tagihan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3B. Confirm Lunas + Input Shopee Packing Link Modal (Admin) -->
+    <div id="confirm-lunas-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-5 bg-slate-900/45 backdrop-blur-sm">
+        <div class="bg-white rounded-3xl max-w-md w-full p-7 shadow-2xl border-2 border-tosca-200">
+            <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-tosca-100 text-tosca-600 flex items-center justify-center">
+                        <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-extrabold text-lg text-slate-800">Konfirmasi Lunas</h3>
+                        <p class="text-xs text-slate-400 font-medium" id="lunas-modal-subtitle">PCQ-0000 &bull; Customer</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('confirm-lunas-modal')" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400 transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleConfirmLunasSubmit(event)" class="space-y-4">
+                <input type="hidden" id="lunas-invoice-id">
+
+                <div class="p-4 rounded-2xl bg-orange-50/80 border border-orange-200 space-y-2">
+                    <label for="lunas-shopee-link-input" class="block text-xs font-extrabold text-orange-800 flex items-center gap-1.5">
+                        <i data-lucide="shopping-bag" class="w-4 h-4 text-orange-600"></i>
+                        <span>Link Checkout Packing Shopee</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="lunas-shopee-link-input" 
+                        placeholder="https://shopee.co.id/..." 
+                        class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-orange-200 focus:border-orange-500 outline-none text-xs sm:text-sm font-medium text-slate-800"
+                    >
+                    <p class="text-[11px] text-orange-700 leading-relaxed">
+                        Tempel link checkout packing Shopee khusus untuk customer ini (bisa juga dikosongkan dulu dan diisi nanti lewat tombol <strong>Edit</strong>).
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="button" onclick="closeModal('confirm-lunas-modal')" class="flex-1 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm transition">Batal</button>
+                    <button type="submit" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-tosca-500 to-emerald-500 hover:from-tosca-600 hover:to-emerald-600 text-white font-extrabold text-sm shadow-md shadow-tosca-200 transition">
+                        ✅ Set Lunas &amp; Simpan
+                    </button>
                 </div>
             </form>
         </div>
@@ -1608,11 +1706,32 @@
 
             document.getElementById('payment-instruction-note').textContent = state.paymentSettings.payment_note || '';
 
-            // Proof Upload / Verified State
+            // Proof Upload / Verified State + Shopee Checkout Packing Link
             const isVerified = inv.status === 'Lunas';
             document.getElementById('proof-verified-box').classList.toggle('hidden', !isVerified);
             document.getElementById('upload-proof-form').classList.toggle('hidden', isVerified);
             document.getElementById('payment-methods-section').classList.toggle('hidden', isVerified);
+
+            const shopeeBox = document.getElementById('shopee-packing-box');
+            const shopeeReady = document.getElementById('shopee-link-ready');
+            const shopeePending = document.getElementById('shopee-link-pending');
+
+            if (isVerified) {
+                shopeeBox.classList.remove('hidden');
+                const normalizedShopeeUrl = normalizeUrl(inv.shopee_link);
+                if (normalizedShopeeUrl) {
+                    shopeeReady.classList.remove('hidden');
+                    shopeePending.classList.add('hidden');
+                    document.getElementById('shopee-link-display').textContent = normalizedShopeeUrl;
+                    document.getElementById('customer-shopee-btn').href = normalizedShopeeUrl;
+                    document.getElementById('copy-shopee-link-btn').onclick = () => copyText(normalizedShopeeUrl, 'Link checkout Shopee disalin!');
+                } else {
+                    shopeeReady.classList.add('hidden');
+                    shopeePending.classList.remove('hidden');
+                }
+            } else {
+                shopeeBox.classList.add('hidden');
+            }
 
             if (isVerified && inv.proof_url) {
                 const viewBtn = document.getElementById('view-verified-proof-btn');
@@ -1781,6 +1900,7 @@
 
             container.innerHTML = filtered.map(inv => {
                 const shareUrl = `${window.location.origin}${window.location.pathname}?kode=${encodeURIComponent(inv.invoice_code)}`;
+                const hasShopee = Boolean(inv.shopee_link && inv.shopee_link.trim());
                 return `
                     <div class="p-5 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col justify-between gap-4">
                         <div class="space-y-2">
@@ -1803,7 +1923,7 @@
 
                             <p class="text-xs text-slate-600 bg-white p-2.5 rounded-xl border border-slate-100 whitespace-pre-line">${escapeHtml(inv.items_desc)}</p>
 
-                            <div class="flex items-center justify-between pt-1">
+                            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
                                 <span class="font-display font-black text-base text-tosca-700">${formatRupiah(inv.amount)}</span>
                                 ${inv.proof_url ? `
                                     <button onclick="openImageLightbox('${escapeHtml(inv.proof_url)}', 'Bukti Bayar — ${escapeHtml(inv.invoice_code)}')" class="px-3 py-1.5 rounded-xl bg-lilac-100 hover:bg-lilac-200 text-lilac-700 text-xs font-extrabold flex items-center gap-1.5">
@@ -1811,13 +1931,31 @@
                                     </button>
                                 ` : '<span class="text-[11px] text-slate-400 italic">Belum ada bukti foto</span>'}
                             </div>
+
+                            <!-- Shopee Packing Link Badge on Admin Card -->
+                            <div class="pt-1">
+                                ${hasShopee ? `
+                                    <div class="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-orange-50 border border-orange-200 text-[11px] text-orange-800">
+                                        <span class="font-bold truncate flex items-center gap-1.5">
+                                            <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-orange-500 shrink-0"></i>
+                                            <span class="truncate">Link Shopee: ${escapeHtml(inv.shopee_link)}</span>
+                                        </span>
+                                        <button type="button" onclick="copyInvoiceShopeeLink('${inv.id}')" class="text-orange-600 hover:text-orange-800 font-extrabold shrink-0">Salin</button>
+                                    </div>
+                                ` : `
+                                    <span class="inline-flex items-center gap-1 text-[11px] text-slate-400">
+                                        <i data-lucide="shopping-bag" class="w-3 h-3"></i> Link Shopee packing belum diisi
+                                    </span>
+                                `}
+                            </div>
+
                             ${inv.proof_note ? `<div class="text-[11px] text-slate-500 italic">Catatan pengirim: "${escapeHtml(inv.proof_note)}"</div>` : ''}
                         </div>
 
                         <div class="pt-3 border-t border-slate-200/70 flex flex-wrap items-center justify-between gap-2">
                             <div class="flex items-center gap-1.5">
                                 ${inv.status !== 'Lunas' ? `
-                                    <button onclick="quickUpdateInvoiceStatus('${inv.id}', 'Lunas')" class="px-3 py-1.5 rounded-xl bg-tosca-500 hover:bg-tosca-600 text-white text-xs font-extrabold transition">
+                                    <button onclick="openConfirmLunasModal('${inv.id}')" class="px-3 py-1.5 rounded-xl bg-tosca-500 hover:bg-tosca-600 text-white text-xs font-extrabold transition">
                                         ✅ Set Lunas
                                     </button>
                                 ` : ''}
@@ -1843,6 +1981,12 @@
             lucide.createIcons();
         }
 
+        function copyInvoiceShopeeLink(id) {
+            const inv = state.invoices.find(i => i.id === id);
+            if (!inv || !inv.shopee_link) return;
+            copyText(normalizeUrl(inv.shopee_link), 'Link checkout Shopee disalin!');
+        }
+
         function generateRandomInvoiceCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let code = 'PCQ-';
@@ -1861,6 +2005,7 @@
             document.getElementById('inv-amount-input').value = '';
             document.getElementById('inv-status-input').value = 'Belum Bayar';
             document.getElementById('inv-items-input').value = '';
+            document.getElementById('inv-shopee-link-input').value = '';
             document.getElementById('inv-note-input').value = '';
             openModal('invoice-modal');
         }
@@ -1876,6 +2021,7 @@
             document.getElementById('inv-amount-input').value = inv.amount || 0;
             document.getElementById('inv-status-input').value = inv.status || 'Belum Bayar';
             document.getElementById('inv-items-input').value = inv.items_desc || '';
+            document.getElementById('inv-shopee-link-input').value = inv.shopee_link || '';
             document.getElementById('inv-note-input').value = inv.admin_note || '';
             openModal('invoice-modal');
         }
@@ -1885,6 +2031,7 @@
             if (!state.user || !sb) return;
 
             const id = document.getElementById('edit-invoice-id').value;
+            const rawShopee = document.getElementById('inv-shopee-link-input').value.trim();
             const payload = {
                 invoice_code: document.getElementById('inv-code-input').value.trim().toUpperCase(),
                 customer_name: document.getElementById('inv-customer-input').value.trim(),
@@ -1892,6 +2039,7 @@
                 amount: Number(document.getElementById('inv-amount-input').value) || 0,
                 status: document.getElementById('inv-status-input').value,
                 items_desc: document.getElementById('inv-items-input').value.trim(),
+                shopee_link: rawShopee ? normalizeUrl(rawShopee) : '',
                 admin_note: document.getElementById('inv-note-input').value.trim()
             };
 
@@ -1903,10 +2051,42 @@
 
             if (error) {
                 console.error(error);
-                showToast('Gagal menyimpan tagihan (pastikan kode unik).', 'error');
+                showToast('Gagal menyimpan tagihan (pastikan kode unik & kolom shopee_link ada).', 'error');
             } else {
                 await fetchAllData();
                 showToast(`Tagihan ${payload.invoice_code} berhasil disimpan!`);
+            }
+        }
+
+        function openConfirmLunasModal(id) {
+            const inv = state.invoices.find(i => i.id === id);
+            if (!inv) return;
+            document.getElementById('lunas-invoice-id').value = inv.id;
+            document.getElementById('lunas-modal-subtitle').textContent = `${inv.invoice_code} • ${inv.customer_name}`;
+            document.getElementById('lunas-shopee-link-input').value = inv.shopee_link || '';
+            openModal('confirm-lunas-modal');
+        }
+
+        async function handleConfirmLunasSubmit(e) {
+            e.preventDefault();
+            if (!state.user || !sb) return;
+
+            const id = document.getElementById('lunas-invoice-id').value;
+            const rawShopee = document.getElementById('lunas-shopee-link-input').value.trim();
+            const payload = {
+                status: 'Lunas',
+                shopee_link: rawShopee ? normalizeUrl(rawShopee) : ''
+            };
+
+            closeModal('confirm-lunas-modal');
+
+            const { error } = await sb.from('invoices').update(payload).eq('id', id);
+            if (error) {
+                console.error(error);
+                showToast('Gagal mengonfirmasi Lunas.', 'error');
+            } else {
+                await fetchAllData();
+                showToast('Tagihan dikonfirmasi Lunas! Link Shopee siap diakses customer.');
             }
         }
 
@@ -2197,6 +2377,13 @@
         }
 
         // Helpers
+        function normalizeUrl(url) {
+            if (!url) return '';
+            const trimmed = String(url).trim();
+            if (!trimmed) return '';
+            return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+        }
+
         function formatRupiah(num) {
             return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
         }
