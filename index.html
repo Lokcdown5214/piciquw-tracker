@@ -1429,16 +1429,12 @@
         </div>
     </div>
 
-    <!-- App, Supabase & Telegram Notification Logic -->
+    <!-- App & Supabase Logic -->
     <script>
         // ====== KONFIGURASI SUPABASE PICIQUW ======
         const SUPABASE_URL = "https://cwpyhgasbmauesacdiag.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_ouDVGuaX-Ogc8zFBPXryhA_CoBNWK46";
         const STORAGE_BUCKET = "piciquw-uploads";
-
-        // ====== KONFIGURASI TELEGRAM NOTIF ADMIN (GRATIS) ======
-        const TELEGRAM_BOT_TOKEN = "9083389770:AAGfedJO4cKiYlZWe8wcRsaihLZ1OdP8JLc";
-        const TELEGRAM_CHAT_ID = "6241596011";
 
         // Konfigurasi Denda Keterlambatan
         const GRACE_PERIOD_DAYS = 3;
@@ -2232,81 +2228,6 @@
             });
         }
 
-        // ==================== KIRIM NOTIFIKASI FOTO + DATA KE TELEGRAM ====================
-        function escapeTelegramHtml(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-        }
-
-        async function sendTelegramPaymentNotification(inv, imageBlob, senderNote, paidAt) {
-            if (
-                !TELEGRAM_BOT_TOKEN ||
-                TELEGRAM_BOT_TOKEN === "9083389770:AAGfedJO4cKiYlZWe8wcRsaihLZ1OdP8JLc" ||
-                !TELEGRAM_CHAT_ID ||
-                TELEGRAM_CHAT_ID === "6241596011"
-            ) {
-                return;
-            }
-
-            try {
-                const calc = calculateInvoicePenalty(inv);
-                const portalUrl = `${window.location.origin}${window.location.pathname}?kode=${encodeURIComponent(inv.invoice_code)}`;
-
-                const lines = [
-                    `💸 <b>BUKTI PEMBAYARAN BARU MASUK!</b>`,
-                    ``,
-                    `🧾 <b>Kode Tagihan:</b> <code>${escapeTelegramHtml(inv.invoice_code)}</code>`,
-                    `👤 <b>Customer:</b> ${escapeTelegramHtml(inv.customer_name || '-')}`,
-                    `📦 <b>Batch:</b> ${escapeTelegramHtml(inv.batch_info || 'Pesanan PICIQUW')}`,
-                    `💰 <b>Tagihan Awal:</b> ${formatRupiah(calc.baseAmount)}`
-                ];
-
-                if (calc.isOverdue) {
-                    lines.push(`⚠️ <b>Denda (${calc.lateDays} hari):</b> +${formatRupiah(calc.penalty)}`);
-                }
-
-                lines.push(`💵 <b>Total Tagihan:</b> <b>${formatRupiah(calc.totalAmount)}</b>`);
-
-                if (senderNote) {
-                    lines.push(`📝 <b>Catatan Pengirim:</b> ${escapeTelegramHtml(senderNote)}`);
-                }
-
-                lines.push(`🕒 <b>Waktu Upload:</b> ${escapeTelegramHtml(paidAt)}`);
-                lines.push(``);
-                lines.push(`👉 <a href="${portalUrl}">Cek &amp; Konfirmasi di Portal PICIQUW</a>`);
-
-                const caption = lines.join('\n').slice(0, 1020);
-
-                const formData = new FormData();
-                formData.append('chat_id', TELEGRAM_CHAT_ID);
-                formData.append('photo', imageBlob, `${inv.invoice_code}-bukti.jpg`);
-                formData.append('caption', caption);
-                formData.append('parse_mode', 'HTML');
-
-                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!res.ok) {
-                    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: TELEGRAM_CHAT_ID,
-                            text: caption,
-                            parse_mode: 'HTML'
-                        })
-                    });
-                }
-            } catch (tgErr) {
-                console.warn('Notifikasi Telegram dilewati:', tgErr);
-            }
-        }
-
         async function handleUploadPaymentProof(e) {
             e.preventDefault();
             const inv = state.activeCustomerInvoice;
@@ -2347,9 +2268,6 @@
                     .eq('id', inv.id);
 
                 if (updateErr) throw updateErr;
-
-                // Kirim foto bukti & rincian pembayaran langsung ke Telegram Admin
-                await sendTelegramPaymentNotification(inv, compressedBlob, senderNote, paidAt);
 
                 showToast('Bukti pembayaran berhasil dikirim! Menunggu konfirmasi admin.');
                 await lookupInvoiceByCode(inv.invoice_code);
