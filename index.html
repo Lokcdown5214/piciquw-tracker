@@ -173,7 +173,7 @@
         </div>
     </div>
 
-    <!-- Top Navigation Bar (Mobile-First Balanced & Centered) -->
+    <!-- Top Navigation Bar -->
     <header class="relative z-20 pt-4 sm:pt-5 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto bg-white/95 backdrop-blur-md border-2 border-lilac-100 rounded-3xl sm:rounded-full p-3 sm:px-7 sm:py-3 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
             <button onclick="switchPage('home')" class="flex items-center justify-center sm:justify-start gap-2.5 group">
@@ -369,7 +369,7 @@
                     Cek status terkini pesanan &amp; perjalanan paket kamu dengan mudah dan nyaman 🛍️📦
                 </p>
 
-                <!-- 7-Step Flow Guide Box (Clean 2-col Grid on Mobile, Flex Row on Desktop) -->
+                <!-- 7-Step Flow Guide Box -->
                 <div class="mt-5 sm:mt-6 w-full bg-white/95 backdrop-blur-md p-4 sm:p-6 rounded-3xl border-2 border-lilac-100 shadow-sm">
                     <p class="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3 sm:mb-3.5">
                         Alur Perjalanan Paket PICIQUW (7 Tahap)
@@ -497,7 +497,7 @@
                 </p>
             </div>
 
-            <!-- Batch Cards List (Equal-height 2-column grid with items-stretch) -->
+            <!-- Batch Cards List -->
             <div id="batch-list" class="grid grid-cols-1 xl:grid-cols-2 gap-5 sm:gap-7 items-stretch"></div>
 
             <!-- Empty State -->
@@ -527,7 +527,7 @@
                 </p>
             </div>
 
-            <!-- ADMIN INVOICE MANAGEMENT PANEL (Visible only when Admin is logged in) -->
+            <!-- ADMIN INVOICE MANAGEMENT PANEL -->
             <div id="admin-billing-panel" class="hidden space-y-5 sm:space-y-6">
                 <div class="clean-card rounded-3xl p-5 sm:p-6 border-2 border-dashed border-lilac-400">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -774,7 +774,7 @@
                     </div>
                 </div>
 
-                <!-- 2. Payment Methods Card (Equal-height QRIS & Bank Transfer Boxes) -->
+                <!-- 2. Payment Methods Card -->
                 <div id="payment-methods-section" class="clean-card rounded-3xl p-5 sm:p-8 space-y-5 sm:space-y-6">
                     <div>
                         <h3 class="font-display text-lg sm:text-xl font-black text-slate-800 flex items-center gap-2">
@@ -812,7 +812,7 @@
                             </div>
                         </div>
 
-                        <!-- Bank Transfer / E-Wallet List (Matched Frame & Equal Height) -->
+                        <!-- Bank Transfer / E-Wallet List -->
                         <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-b from-tosca-50/80 to-white border-2 border-tosca-200 flex flex-col justify-between gap-4 h-full">
                             <div class="text-center">
                                 <div class="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full bg-tosca-100 text-tosca-700 text-[11px] sm:text-xs font-extrabold">
@@ -824,7 +824,7 @@
                         </div>
                     </div>
 
-                    <!-- Enlarged High-Visibility Payment Notes Box -->
+                    <!-- Payment Notes Box -->
                     <div class="p-4 sm:p-6 rounded-3xl bg-amber-50 border-2 border-amber-400 shadow-md shadow-amber-100/80 space-y-2.5">
                         <div class="flex items-center gap-2 text-xs sm:text-sm font-black uppercase tracking-wider text-amber-800">
                             <i data-lucide="alert-circle" class="w-5 h-5 text-amber-600 shrink-0"></i>
@@ -969,7 +969,7 @@
         </div>
     </div>
 
-    <!-- 2. Add / Edit Batch Modal (7 Stages) -->
+    <!-- 2. Add / Edit Batch Modal -->
     <div id="batch-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-5 bg-slate-900/45 backdrop-blur-sm">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border-2 border-lilac-100 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-5 sm:mb-6">
@@ -1429,12 +1429,16 @@
         </div>
     </div>
 
-    <!-- App & Supabase Logic -->
+    <!-- App, Supabase & Telegram Notification Logic -->
     <script>
         // ====== KONFIGURASI SUPABASE PICIQUW ======
         const SUPABASE_URL = "https://cwpyhgasbmauesacdiag.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_ouDVGuaX-Ogc8zFBPXryhA_CoBNWK46";
         const STORAGE_BUCKET = "piciquw-uploads";
+
+        // ====== KONFIGURASI TELEGRAM NOTIF ADMIN (GRATIS) ======
+        const TELEGRAM_BOT_TOKEN = "9083389770:AAGfedJO4cKiYlZWe8wcRsaihLZ1OdP8JLc";
+        const TELEGRAM_CHAT_ID = "6241596011";
 
         // Konfigurasi Denda Keterlambatan
         const GRACE_PERIOD_DAYS = 3;
@@ -2228,6 +2232,81 @@
             });
         }
 
+        // ==================== KIRIM NOTIFIKASI FOTO + DATA KE TELEGRAM ====================
+        function escapeTelegramHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        async function sendTelegramPaymentNotification(inv, imageBlob, senderNote, paidAt) {
+            if (
+                !TELEGRAM_BOT_TOKEN ||
+                TELEGRAM_BOT_TOKEN === "9083389770:AAGfedJO4cKiYlZWe8wcRsaihLZ1OdP8JLc" ||
+                !TELEGRAM_CHAT_ID ||
+                TELEGRAM_CHAT_ID === "6241596011"
+            ) {
+                return;
+            }
+
+            try {
+                const calc = calculateInvoicePenalty(inv);
+                const portalUrl = `${window.location.origin}${window.location.pathname}?kode=${encodeURIComponent(inv.invoice_code)}`;
+
+                const lines = [
+                    `💸 <b>BUKTI PEMBAYARAN BARU MASUK!</b>`,
+                    ``,
+                    `🧾 <b>Kode Tagihan:</b> <code>${escapeTelegramHtml(inv.invoice_code)}</code>`,
+                    `👤 <b>Customer:</b> ${escapeTelegramHtml(inv.customer_name || '-')}`,
+                    `📦 <b>Batch:</b> ${escapeTelegramHtml(inv.batch_info || 'Pesanan PICIQUW')}`,
+                    `💰 <b>Tagihan Awal:</b> ${formatRupiah(calc.baseAmount)}`
+                ];
+
+                if (calc.isOverdue) {
+                    lines.push(`⚠️ <b>Denda (${calc.lateDays} hari):</b> +${formatRupiah(calc.penalty)}`);
+                }
+
+                lines.push(`💵 <b>Total Tagihan:</b> <b>${formatRupiah(calc.totalAmount)}</b>`);
+
+                if (senderNote) {
+                    lines.push(`📝 <b>Catatan Pengirim:</b> ${escapeTelegramHtml(senderNote)}`);
+                }
+
+                lines.push(`🕒 <b>Waktu Upload:</b> ${escapeTelegramHtml(paidAt)}`);
+                lines.push(``);
+                lines.push(`👉 <a href="${portalUrl}">Cek &amp; Konfirmasi di Portal PICIQUW</a>`);
+
+                const caption = lines.join('\n').slice(0, 1020);
+
+                const formData = new FormData();
+                formData.append('chat_id', TELEGRAM_CHAT_ID);
+                formData.append('photo', imageBlob, `${inv.invoice_code}-bukti.jpg`);
+                formData.append('caption', caption);
+                formData.append('parse_mode', 'HTML');
+
+                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!res.ok) {
+                    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: TELEGRAM_CHAT_ID,
+                            text: caption,
+                            parse_mode: 'HTML'
+                        })
+                    });
+                }
+            } catch (tgErr) {
+                console.warn('Notifikasi Telegram dilewati:', tgErr);
+            }
+        }
+
         async function handleUploadPaymentProof(e) {
             e.preventDefault();
             const inv = state.activeCustomerInvoice;
@@ -2268,6 +2347,9 @@
                     .eq('id', inv.id);
 
                 if (updateErr) throw updateErr;
+
+                // Kirim foto bukti & rincian pembayaran langsung ke Telegram Admin
+                await sendTelegramPaymentNotification(inv, compressedBlob, senderNote, paidAt);
 
                 showToast('Bukti pembayaran berhasil dikirim! Menunggu konfirmasi admin.');
                 await lookupInvoiceByCode(inv.invoice_code);
