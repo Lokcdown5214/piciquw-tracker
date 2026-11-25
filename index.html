@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="overflow-x-hidden">
+<html lang="id" class="overflow-x-hidden scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -185,18 +185,22 @@
                 </span>
             </button>
 
-            <nav aria-label="Menu Utama" class="grid grid-cols-3 sm:flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
-                <button onclick="switchPage('home')" data-nav="home" class="nav-pill justify-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-extrabold transition flex items-center gap-1 sm:gap-1.5 bg-lilac-500 text-white shadow-sm">
+            <nav aria-label="Menu Utama" class="grid grid-cols-2 sm:flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+                <button onclick="switchPage('home')" data-nav="home" class="nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-extrabold transition flex items-center gap-1 sm:gap-1.5 bg-lilac-500 text-white shadow-sm">
                     <i data-lucide="home" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
                     <span>Beranda</span>
                 </button>
-                <button onclick="switchPage('tracker')" data-nav="tracker" class="nav-pill justify-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-lilac-50">
+                <button onclick="switchPage('tracker')" data-nav="tracker" class="nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-lilac-50">
                     <i data-lucide="package-search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
                     <span>Batch Tracker</span>
                 </button>
-                <button onclick="switchPage('billing')" data-nav="billing" class="nav-pill justify-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-tosca-50">
+                <button onclick="switchPage('billing')" data-nav="billing" class="nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-tosca-50">
                     <i data-lucide="receipt" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
                     <span>Cek Tagihan</span>
+                </button>
+                <button onclick="jumpToHelpSection()" data-nav="help" class="nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-lilac-50">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
+                    <span>QnA &amp; Kontak</span>
                 </button>
             </nav>
         </div>
@@ -351,6 +355,62 @@
                         </button>
                     </form>
                 </div>
+            </div>
+
+            <!-- ==================== SECTION: QNA (FAQ) & CONTACT PERSON SOSMED ==================== -->
+            <div id="section-qna-contact" class="pt-2 space-y-6 sm:space-y-8 scroll-mt-24">
+                
+                <!-- 1. QnA (Pertanyaan yang Sering Ditanyakan — Tanpa Tab Semua Topik) -->
+                <div class="clean-card rounded-3xl p-5 sm:p-7 bg-white/95 space-y-4 sm:space-y-5">
+                    <div class="space-y-1">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lilac-100 text-lilac-700 text-[11px] font-extrabold uppercase tracking-wider">
+                            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                            <span>Pusat Bantuan Customer</span>
+                        </span>
+                        <h2 class="font-display text-xl sm:text-2xl font-black text-slate-800">
+                            QnA &amp; Panduan Order PICIQUW 💬
+                        </h2>
+                        <p class="text-xs sm:text-sm text-slate-500">
+                            Pilih topik bantuan di bawah ini, lalu klik pertanyaan untuk melihat jawabannya.
+                        </p>
+                    </div>
+
+                    <!-- QnA Category Filter Pills (Tanpa "Semua Topik") -->
+                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <button type="button" onclick="setQnaCategory('Batch & Pengiriman')" data-qna-cat="Batch & Pengiriman" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-lilac-500 text-white shadow-xs transition">
+                            📦 Batch &amp; Pengiriman
+                        </button>
+                        <button type="button" onclick="setQnaCategory('Tagihan & Denda')" data-qna-cat="Tagihan & Denda" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-600 hover:bg-tosca-50 border border-slate-200 transition">
+                            💳 Tagihan &amp; Denda
+                        </button>
+                        <button type="button" onclick="setQnaCategory('Shopee & Layanan')" data-qna-cat="Shopee & Layanan" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-600 hover:bg-orange-50 border border-slate-200 transition">
+                            🛍️ Shopee &amp; Layanan
+                        </button>
+                    </div>
+
+                    <!-- QnA Accordion List -->
+                    <div id="qna-accordion-list" class="space-y-2.5"></div>
+                </div>
+
+                <!-- 2. Contact Person & Sosial Media PICIQUW (Compact Size: LINE & X) -->
+                <div class="max-w-3xl mx-auto clean-card rounded-3xl p-4 sm:p-6 bg-gradient-to-br from-white via-lilac-50/40 to-tosca-50/40 space-y-4">
+                    <div class="space-y-0.5">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tosca-100 text-tosca-700 text-[10px] font-extrabold uppercase tracking-wider">
+                            <i data-lucide="headphones" class="w-3 h-3"></i>
+                            <span>Official Channels</span>
+                        </span>
+                        <h2 class="font-display text-lg sm:text-xl font-black text-slate-800">
+                            Contact Person &amp; Sosial Media PICIQUW 📱
+                        </h2>
+                        <p class="text-xs text-slate-500">
+                            Hubungi akun resmi kami untuk konfirmasi kendala tagihan atau pantau update PO terbaru.
+                        </p>
+                    </div>
+
+                    <!-- Social Media & CP Cards Grid (Compact 2 Columns: LINE & X) -->
+                    <div id="social-contacts-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 items-stretch"></div>
+                </div>
+
             </div>
         </section>
 
@@ -916,7 +976,10 @@
     <!-- Footer -->
     <footer class="relative z-10 mt-auto py-6 sm:py-8 px-4 sm:px-8 border-t-2 border-lilac-100 bg-white/90 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-slate-500 text-center sm:text-left">
-            <p class="font-medium">© <span id="year"></span> <strong class="text-lilac-600 font-extrabold">PICIQUW</strong>. All rights reserved.</p>
+            <div class="space-y-1">
+                <p class="font-medium">© <span id="year"></span> <strong class="text-lilac-600 font-extrabold">PICIQUW</strong>. All rights reserved.</p>
+                <div id="footer-social-links" class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 text-[11px] font-bold text-slate-400"></div>
+            </div>
             <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
                 <span class="flex items-center gap-2 text-slate-500 font-medium">
                     <span id="sync-dot" class="w-2.5 h-2.5 rounded-full bg-tosca-400"></span>
@@ -1442,6 +1505,73 @@
         const DAY_IN_MS = 24 * 60 * 60 * 1000;
         // =========================================
 
+        // ====== KONFIGURASI CONTACT PERSON & SOSMED PICIQUW (LINE & X SAJA) ======
+        const PICIQUW_SOCIALS = [
+            {
+                platform: 'LINE Admin',
+                shortName: 'LINE',
+                handle: '@piciquw',
+                copyValue: '@piciquw',
+                url: 'https://line.me/ti/p/xB6NJvKz2t',
+                desc: 'Konfirmasi kendala tagihan, bukti transfer, & pertanyaan mendesak.',
+                badge: 'Contact Person',
+                accentBg: 'bg-emerald-100 text-[#06C755]',
+                btnBg: 'bg-[#06C755] hover:bg-[#05b34c] text-white',
+                svgIcon: `<svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" aria-hidden="true"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>`
+            },
+            {
+                platform: 'X (Twitter)',
+                shortName: 'X',
+                handle: '@gopiciquw',
+                copyValue: '@gopiciquw',
+                url: 'https://x.com/gopiciquw',
+                desc: 'Live update perjalanan batch, slot PO cepat, & pengumuman pelunasan.',
+                badge: 'Live Info & PO',
+                accentBg: 'bg-slate-200 text-slate-900',
+                btnBg: 'bg-slate-900 hover:bg-slate-800 text-white',
+                svgIcon: `<svg viewBox="0 0 24 24" class="w-4 h-4 fill-current" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
+            }
+        ];
+
+        const PICIQUW_QNA = [
+            {
+                category: 'Batch & Pengiriman',
+                question: 'Bagaimana cara mengecek posisi paket batch pesanan saya?',
+                answer: 'Buka menu <strong>Batch Tracker</strong> di bagian atas halaman, lalu pilih negara asal pesanan kamu (<strong>Batch KR, CH, JP, atau THAI</strong>). Kamu bisa langsung melihat tahapan terkini batch pesananmu beserta catatan update dari admin.'
+            },
+            {
+                category: 'Batch & Pengiriman',
+                question: 'Apa arti dari 7 tahapan status di Batch Tracker?',
+                answer: '1. <strong>Pre-order (PO):</strong> Pesanan sedang diproses/dibeli.<br>2. <strong>Shipping:</strong> Barang dikirim dari seller ke gudang negara asal.<br>3. <strong>WH Luar:</strong> Paket sudah tiba dan dikonsolidasi di gudang negara asal.<br>4. <strong>OTW INA:</strong> Paket sedang dalam perjalanan menuju Indonesia.<br>5. <strong>WH INA:</strong> Paket sudah mendarat di gudang Indonesia & sedang disortir.<br>6. <strong>Pelunasan:</strong> Tagihan pelunasan sudah diterbitkan untuk dibayar.<br>7. <strong>Done:</strong> Pesanan sudah selesai & dikirim ke alamatmu.'
+            },
+            {
+                category: 'Tagihan & Denda',
+                question: 'Bagaimana cara cek tagihan dan melakukan pembayaran?',
+                answer: 'Masuk ke menu <strong>Cek Tagihan</strong>, masukkan kode tagihan unik yang diberikan admin (contoh: <code>PCQ-8821</code>), lalu klik <strong>Lihat Tagihan</strong>. Lakukan transfer sesuai nominal total yang tertera melalui <strong>QRIS</strong> atau rekening bank/e-wallet yang tersedia, kemudian unggah screenshot bukti bayar pada formulir di bagian bawah halaman tersebut.'
+            },
+            {
+                category: 'Tagihan & Denda',
+                question: 'Berapa lama batas waktu pembayaran sebelum terkena denda?',
+                answer: 'Setiap tagihan memiliki masa <strong>bebas denda selama 3 hari (72 jam)</strong> sejak tagihan dibuat (kamu bisa melihat hitung mundur waktunya secara langsung di halaman tagihan). Jika melewati batas 3 hari dan belum dikonfirmasi lunas oleh admin, dikenakan denda keterlambatan <strong>Rp 2.000 / hari</strong> yang otomatis berhenti saat status diubah menjadi <strong>Lunas</strong>.'
+            },
+            {
+                category: 'Tagihan & Denda',
+                question: 'Kenapa status tagihan saya berubah menjadi "Bukti Ditolak"?',
+                answer: 'Status ini muncul jika foto bukti transfer buram, terpotong, atau nominal/tujuan transfer belum sesuai. Kamu cukup membuka kembali kode tagihanmu, membaca catatan admin (jika ada), lalu mengunggah ulang screenshot bukti pembayaran yang jelas.'
+            },
+            {
+                category: 'Shopee & Layanan',
+                question: 'Kapan dan di mana saya bisa mendapatkan link checkout packing Shopee?',
+                answer: 'Setelah bukti pembayaran kamu diverifikasi dan status tagihan berubah menjadi <strong>Lunas</strong>, kotak berwarna oranye bertuliskan <strong>Link Checkout Packing Shopee</strong> akan otomatis terbuka di halaman Cek Tagihanmu. Silakan klik tombol tersebut untuk checkout biaya packing & ongkir lokal ke rumahmu.'
+            },
+            {
+                category: 'Shopee & Layanan',
+                question: 'Apakah saya bisa mengganti alamat tujuan pengiriman?',
+                answer: 'Bisa! Karena pengiriman lokal ke rumah menggunakan checkout Shopee setelah tagihan lunas, kamu cukup memastikan alamat penerima di akun Shopee kamu sudah benar sebelum melakukan checkout link packing. Jika ada permintaan khusus, silakan hubungi <strong>LINE Admin PICIQUW</strong>.'
+            }
+        ];
+        // =========================================================================
+
         const COUNTRIES = [
             { code: 'KR', name: 'Batch KR', fullName: 'Korea', flag: '<img src="https://flagcdn.com/w40/kr.png" alt="KR" class="w-5 h-3.5 sm:w-7 sm:h-5 object-cover rounded shadow-sm inline-block shrink-0">' },
             { code: 'CH', name: 'Batch CH', fullName: 'China', flag: '<img src="https://flagcdn.com/w40/cn.png" alt="CN" class="w-5 h-3.5 sm:w-7 sm:h-5 object-cover rounded shadow-sm inline-block shrink-0">' },
@@ -1453,6 +1583,8 @@
             currentPage: 'home',
             selectedCountry: 'KR',
             statusFilter: 'ALL',
+            qnaCategory: 'Batch & Pengiriman',
+            openQnaIndex: -1,
             user: null,
             comingSoonMap: { KR: false, CH: false, JP: true, THAI: true },
             batches: [],
@@ -1475,6 +1607,8 @@
 
         async function initApp() {
             document.getElementById('year').textContent = new Date().getFullYear();
+            renderQnaSection();
+            renderSocialContacts();
             lucide.createIcons();
 
             sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1501,6 +1635,8 @@
                 await lookupInvoiceByCode(kodeParam.toUpperCase());
             } else if (pageParam === 'tracker' || pageParam === 'billing') {
                 switchPage(pageParam);
+            } else if (pageParam === 'help' || pageParam === 'qna') {
+                jumpToHelpSection();
             } else {
                 switchPage('home');
             }
@@ -1561,6 +1697,129 @@
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, () => fetchAllData())
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'payment_settings' }, () => fetchAllData())
                 .subscribe();
+        }
+
+        // ==================== QNA & SOCIAL CONTACTS RENDERING ====================
+        function setQnaCategory(category) {
+            state.qnaCategory = category;
+            state.openQnaIndex = -1;
+            document.querySelectorAll('.qna-cat-pill').forEach(btn => {
+                btn.className = btn.dataset.qnaCat === category
+                    ? 'qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-lilac-500 text-white shadow-xs transition'
+                    : 'qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-600 hover:bg-lilac-50 border border-slate-200 transition';
+            });
+            renderQnaSection();
+        }
+
+        function toggleQnaItem(idx) {
+            state.openQnaIndex = state.openQnaIndex === idx ? -1 : idx;
+            renderQnaSection();
+        }
+
+        function renderQnaSection() {
+            const container = document.getElementById('qna-accordion-list');
+            if (!container) return;
+
+            const filtered = PICIQUW_QNA.filter(item => item.category === state.qnaCategory);
+
+            container.innerHTML = filtered.map((item, idx) => {
+                const isOpen = state.openQnaIndex === idx;
+                return `
+                    <div class="rounded-2xl border-2 transition-all ${isOpen ? 'border-lilac-300 bg-lilac-50/40' : 'border-slate-100 bg-slate-50/60 hover:border-lilac-200'}">
+                        <button 
+                            type="button" 
+                            onclick="toggleQnaItem(${idx})"
+                            aria-expanded="${isOpen}"
+                            class="w-full p-3.5 sm:p-4 text-left flex items-center justify-between gap-3"
+                        >
+                            <h3 class="font-display font-extrabold text-xs sm:text-sm text-slate-800 leading-snug">
+                                ${escapeHtml(item.question)}
+                            </h3>
+                            <span class="w-7 h-7 rounded-xl bg-white border border-slate-200 text-slate-500 flex items-center justify-center shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-lilac-600 border-lilac-300' : ''}">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </span>
+                        </button>
+                        ${isOpen ? `
+                            <div class="px-3.5 sm:px-4 pb-3.5 sm:pb-4 pt-0 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-lilac-100/80">
+                                <div class="pt-2.5">${item.answer}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function renderSocialContacts() {
+            const grid = document.getElementById('social-contacts-grid');
+            const footerLinks = document.getElementById('footer-social-links');
+
+            if (grid) {
+                grid.innerHTML = PICIQUW_SOCIALS.map(soc => `
+                    <div class="p-4 rounded-2xl bg-white border-2 border-lilac-100 hover:border-tosca-300 shadow-xs transition flex flex-col justify-between gap-3 h-full">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="w-9 h-9 rounded-xl ${soc.accentBg} flex items-center justify-center shrink-0">
+                                        ${soc.svgIcon}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h3 class="font-display font-black text-sm sm:text-base text-slate-800 leading-tight">${escapeHtml(soc.platform)}</h3>
+                                        <div class="text-xs font-extrabold text-lilac-700 truncate">${escapeHtml(soc.handle)}</div>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[9px] font-extrabold uppercase tracking-wider shrink-0">
+                                    ${escapeHtml(soc.badge)}
+                                </span>
+                            </div>
+
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                ${escapeHtml(soc.desc)}
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 pt-0.5">
+                            <a 
+                                href="${escapeHtml(soc.url)}" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="flex-1 py-2 px-3 rounded-xl ${soc.btnBg} text-xs font-extrabold transition flex items-center justify-center gap-1.5 shadow-xs"
+                            >
+                                <span>Buka ${escapeHtml(soc.shortName)}</span>
+                                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                            </a>
+                            <button 
+                                type="button" 
+                                onclick="copyText('${escapeHtml(soc.copyValue)}', '${escapeHtml(soc.platform)} (${escapeHtml(soc.copyValue)}) disalin!')" 
+                                title="Salin ${escapeHtml(soc.copyValue)}"
+                                class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition shrink-0"
+                            >
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            if (footerLinks) {
+                footerLinks.innerHTML = PICIQUW_SOCIALS.map(soc => `
+                    <a href="${escapeHtml(soc.url)}" target="_blank" rel="noopener noreferrer" class="hover:text-lilac-600 transition">
+                        ${escapeHtml(soc.shortName)}
+                    </a>
+                `).join('<span>&bull;</span>');
+            }
+        }
+
+        function jumpToHelpSection() {
+            switchPage('home', false);
+            setActiveNavPill('help');
+            setTimeout(() => {
+                const target = document.getElementById('section-qna-contact');
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 60);
         }
 
         // ==================== LIVE COUNTDOWN & PENALTY ENGINE ====================
@@ -1664,20 +1923,26 @@
         }
 
         // Page Switching
-        function switchPage(page) {
+        function setActiveNavPill(navKey) {
+            document.querySelectorAll('.nav-pill').forEach(btn => {
+                const isActive = btn.dataset.nav === navKey;
+                btn.className = isActive
+                    ? 'nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-extrabold transition flex items-center gap-1 sm:gap-1.5 bg-lilac-500 text-white shadow-sm'
+                    : 'nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-lilac-50';
+            });
+        }
+
+        function switchPage(page, scrollTop = true) {
             state.currentPage = page;
             document.getElementById('page-home').classList.toggle('hidden', page !== 'home');
             document.getElementById('page-tracker').classList.toggle('hidden', page !== 'tracker');
             document.getElementById('page-billing').classList.toggle('hidden', page !== 'billing');
 
-            document.querySelectorAll('.nav-pill').forEach(btn => {
-                const isActive = btn.dataset.nav === page;
-                btn.className = isActive
-                    ? 'nav-pill justify-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-extrabold transition flex items-center gap-1 sm:gap-1.5 bg-lilac-500 text-white shadow-sm'
-                    : 'nav-pill justify-center whitespace-nowrap px-2 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-lilac-50';
-            });
+            setActiveNavPill(page);
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (scrollTop) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             renderAll();
         }
 
