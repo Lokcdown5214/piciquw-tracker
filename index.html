@@ -7,15 +7,15 @@
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="Logo Piciquw_2.jpg">
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <!-- Google Fonts: Nunito & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@1.81.0"></script>
     <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script>
     <!-- SheetJS (Export Excel .xlsx) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -365,7 +365,7 @@
                         <input 
                             type="text" 
                             id="home-invoice-input" 
-                            placeholder="Contoh: PCQ-8821" 
+                            placeholder="Contoh: PCQ-7K4M-X9QA" 
                             class="flex-1 min-w-0 md:w-56 px-3.5 sm:px-4 py-3 rounded-2xl bg-tosca-50/50 border-2 border-tosca-200 focus:border-tosca-500 focus:bg-white outline-none text-sm font-extrabold uppercase tracking-wider text-slate-800"
                         >
                         <button type="submit" class="px-4 sm:px-5 py-3 rounded-2xl bg-tosca-500 hover:bg-tosca-600 text-white font-extrabold text-sm shadow-sm transition flex items-center justify-center gap-1.5 shrink-0">
@@ -613,7 +613,7 @@
                         <input 
                             type="text" 
                             id="customer-invoice-code" 
-                            placeholder="CONTOH: PCQ-8821" 
+                            placeholder="CONTOH: PCQ-7K4M-X9QA" 
                             required
                             class="w-full sm:flex-1 min-w-0 px-4 sm:px-5 py-3.5 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-tosca-500 focus:bg-white outline-none text-center sm:text-left text-base sm:text-lg font-black uppercase tracking-widest text-slate-800"
                         >
@@ -1165,7 +1165,7 @@
                             <div class="p-3 rounded-2xl border-2 border-slate-100 bg-slate-50/60 peer-checked:border-pink-400 peer-checked:bg-pink-50 transition flex items-center gap-2.5">
                                 <span class="text-xl">🛍️</span>
                                 <div>
-                                    <div class="text-xs font-extrabold text-slate-800 peer-checked:text-pink-700">1. Pre-order (PO)</div>
+                                    <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-pink-700">1. Pre-order (PO)</div>
                                     <div class="text-[11px] text-slate-400">Open / Proses PO</div>
                                 </div>
                             </div>
@@ -1175,7 +1175,7 @@
                             <div class="p-3 rounded-2xl border-2 border-slate-100 bg-slate-50/60 peer-checked:border-amber-400 peer-checked:bg-amber-50 transition flex items-center gap-2.5">
                                 <span class="text-xl">🚚</span>
                                 <div>
-                                    <div class="text-xs font-extrabold text-slate-800 peer-checked:text-amber-700">2. Shipping</div>
+                                    <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-amber-700">2. Shipping</div>
                                     <div class="text-[11px] text-slate-400">Kirim ke WH Luar</div>
                                 </div>
                             </div>
@@ -1185,7 +1185,7 @@
                             <div class="p-3 rounded-2xl border-2 border-slate-100 bg-slate-50/60 peer-checked:border-lilac-400 peer-checked:bg-lilac-50 transition flex items-center gap-2.5">
                                 <span class="text-xl">🏢</span>
                                 <div>
-                                    <div class="text-xs font-extrabold text-slate-800 peer-checked:text-lilac-700">3. WH Luar</div>
+                                    <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-lilac-700">3. WH Luar</div>
                                     <div class="text-[11px] text-slate-400">Di Gudang Luar</div>
                                 </div>
                             </div>
@@ -1195,7 +1195,7 @@
                             <div class="p-3 rounded-2xl border-2 border-slate-100 bg-slate-50/60 peer-checked:border-tosca-400 peer-checked:bg-tosca-50 transition flex items-center gap-2.5">
                                 <span class="text-xl">✈️</span>
                                 <div>
-                                    <div class="text-xs font-extrabold text-slate-800 peer-checked:text-tosca-700">4. OTW INA</div>
+                                    <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-tosca-700">4. OTW INA</div>
                                     <div class="text-[11px] text-slate-400">Menuju Indonesia</div>
                                 </div>
                             </div>
@@ -1205,7 +1205,7 @@
                             <div class="p-3 rounded-2xl border-2 border-slate-100 bg-slate-50/60 peer-checked:border-sky-400 peer-checked:bg-sky-50 transition flex items-center gap-2.5">
                                 <span class="text-xl">🏠</span>
                                 <div>
-                                    <div class="text-xs font-extrabold text-slate-800 peer-checked:text-sky-700">5. WH INA</div>
+                                    <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-sky-700">5. WH INA</div>
                                     <div class="text-[11px] text-slate-400">Tiba di Gudang INA</div>
                                 </div>
                             </div>
@@ -1215,7 +1215,7 @@
                             <div class="p-3 rounded-2xl border-2 border-slate-100 bg-slate-50/60 peer-checked:border-orange-400 peer-checked:bg-orange-50 transition flex items-center gap-2.5">
                                 <span class="text-xl">💳</span>
                                 <div>
-                                    <div class="text-xs font-extrabold text-slate-800 peer-checked:text-orange-700">6. Pelunasan</div>
+                                    <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-orange-700">6. Pelunasan</div>
                                     <div class="text-[11px] text-slate-400">Tahap Pelunasan</div>
                                 </div>
                             </div>
@@ -1225,7 +1225,7 @@
                             <div class="p-3 rounded-2xl border-2 border-slate-100 bg-slate-50/60 peer-checked:border-emerald-400 peer-checked:bg-emerald-50 transition flex items-center gap-2.5">
                                 <span class="text-xl">🎉</span>
                                 <div>
-                                    <div class="text-xs font-extrabold text-slate-800 peer-checked:text-emerald-700">7. Done</div>
+                                    <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-emerald-700">7. Done</div>
                                     <div class="text-[11px] text-slate-400">Batch Selesai &amp; Terkirim</div>
                                 </div>
                             </div>
@@ -1270,7 +1270,7 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1.5">Kode Tagihan (Unik)</label>
                     <div class="flex gap-2">
-                        <input type="text" id="inv-code-input" placeholder="PCQ-8821" required class="flex-1 min-w-0 px-4 py-3 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-black uppercase tracking-wider text-slate-800">
+                        <input type="text" id="inv-code-input" placeholder="PCQ-7K4M-X9QA" required class="flex-1 min-w-0 px-4 py-3 rounded-2xl bg-lilac-50/70 border-2 border-lilac-200 focus:border-lilac-500 outline-none text-sm font-black uppercase tracking-wider text-slate-800">
                         <button type="button" onclick="generateRandomInvoiceCode()" class="px-4 py-3 rounded-2xl bg-tosca-100 hover:bg-tosca-200 text-tosca-700 text-xs font-extrabold transition shrink-0">
                             Acak Kode
                         </button>
@@ -1451,14 +1451,14 @@
                         <label class="cursor-pointer">
                             <input type="radio" name="export-scope" value="ALL" class="peer sr-only" checked onchange="updateExportModalSummary()">
                             <div class="p-3 rounded-2xl border-2 border-slate-200 bg-slate-50/70 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition">
-                                <div class="text-xs font-extrabold text-slate-800 peer-checked:text-emerald-800">Semua Tagihan</div>
+                                <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-emerald-800">Semua Tagihan</div>
                                 <div id="export-all-count-label" class="text-[11px] text-slate-500 mt-0.5">0 data</div>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="export-scope" value="FILTERED" class="peer sr-only" onchange="updateExportModalSummary()">
                             <div class="p-3 rounded-2xl border-2 border-slate-200 bg-slate-50/70 peer-checked:border-lilac-500 peer-checked:bg-lilac-50 transition">
-                                <div class="text-xs font-extrabold text-slate-800 peer-checked:text-lilac-800">Sesuai Filter Aktif</div>
+                                <div class="text-xs font-extrabold text-slate-800 [input:checked+div_&]:text-lilac-800">Sesuai Filter Aktif</div>
                                 <div id="export-filtered-count-label" class="text-[11px] text-slate-500 mt-0.5">0 data</div>
                             </div>
                         </label>
@@ -1682,7 +1682,7 @@
             {
                 category: 'Tagihan & Denda',
                 question: 'Bagaimana cara cek tagihan dan melakukan pembayaran?',
-                answer: 'Masuk ke menu <strong>Cek Tagihan</strong>, masukkan kode tagihan unik yang diberikan admin (contoh: <code>PCQ-8821</code>), lalu klik <strong>Lihat Tagihan</strong>. Lakukan transfer sesuai nominal total yang tertera melalui <strong>QRIS</strong> atau rekening bank/e-wallet yang tersedia, kemudian unggah screenshot bukti bayar pada formulir di bagian bawah halaman tersebut.'
+                answer: 'Masuk ke menu <strong>Cek Tagihan</strong>, masukkan kode tagihan unik yang diberikan admin (contoh: <code>PCQ-7K4M-X9QA</code>), lalu klik <strong>Lihat Tagihan</strong>. Lakukan transfer sesuai nominal total yang tertera melalui <strong>QRIS</strong> atau rekening bank/e-wallet yang tersedia, kemudian unggah screenshot bukti bayar pada formulir di bagian bawah halaman tersebut.'
             },
             {
                 category: 'Tagihan & Denda',
@@ -1727,6 +1727,7 @@
             adminInvoiceFilter: 'ALL',
             activeCustomerInvoice: null,
             formInvoiceKey: null,
+            serverOffsetMs: 0,
             selectedProofFile: null,
             paymentSettings: {
                 qris_url: '',
@@ -1752,6 +1753,7 @@
             lucide.createIcons();
 
             sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            await syncServerTime();
 
             const { data: { session } } = await sb.auth.getSession();
             state.user = isAuthorizedAdmin(session?.user) ? session.user : null;
@@ -1963,7 +1965,7 @@
         }
 
         // ==================== LIVE COUNTDOWN & PENALTY ENGINE ====================
-        function getRemainingParts(deadlineMs, nowMs = Date.now()) {
+        function getRemainingParts(deadlineMs, nowMs = serverNow()) {
             const diff = Math.max(0, deadlineMs - nowMs);
             const days = Math.floor(diff / DAY_IN_MS);
             const hours = Math.floor((diff % DAY_IN_MS) / (60 * 60 * 1000));
@@ -2016,7 +2018,7 @@
         function startCountdownTicker() {
             if (countdownInterval) clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
-                const nowMs = Date.now();
+                const nowMs = serverNow();
 
                 const inv = state.activeCustomerInvoice;
                 if (inv && inv.status !== 'Lunas') {
@@ -2048,7 +2050,7 @@
             }, 1000);
         }
 
-        function updateCustomerCountdownDOM(deadlineMs, nowMs = Date.now()) {
+        function updateCustomerCountdownDOM(deadlineMs, nowMs = serverNow()) {
             const p = getRemainingParts(deadlineMs, nowMs);
             document.getElementById('cd-days').textContent = String(p.days).padStart(2, '0');
             document.getElementById('cd-hours').textContent = String(p.hours).padStart(2, '0');
@@ -2070,7 +2072,7 @@
 
         function calculateInvoicePenalty(inv) {
             const baseAmount = Number(inv.amount || 0);
-            const startMs = inv.created_at ? new Date(inv.created_at).getTime() : Date.now();
+            const startMs = inv.created_at ? new Date(inv.created_at).getTime() : serverNow();
             const graceMs = GRACE_PERIOD_DAYS * DAY_IN_MS;
             const deadlineMs = startMs + graceMs;
             const deadlineDate = new Date(deadlineMs);
@@ -2078,7 +2080,7 @@
             const isLunas = inv.status === 'Lunas';
             const endMs = (isLunas && inv.lunas_at)
                 ? new Date(inv.lunas_at).getTime()
-                : Date.now();
+                : serverNow();
 
             const elapsedMs = Math.max(0, endMs - startMs);
             let lateDays = 0;
@@ -2352,7 +2354,7 @@
                                         <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
                                         <span>Edit</span>
                                     </button>
-                                    <button onclick="openDeleteModal('batch', '${batch.id}', '${escapeHtml(batch.name)}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 transition">
+                                    <button data-delete-type="batch" data-delete-id="${escapeHtml(batch.id)}" data-delete-label="${escapeHtml(batch.name)}" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500 transition">
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </div>
@@ -2437,7 +2439,9 @@
                 const { data, error } = await sb.rpc('get_customer_invoice', { p_code: code });
                 const invoiceRow = Array.isArray(data) ? data[0] : data;
 
-                if (error || !invoiceRow) {
+                if (error && /terlalu banyak/i.test(error.message || '')) {
+                    showToast('Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi ya.', 'error');
+                } else if (error || !invoiceRow) {
                     state.activeCustomerInvoice = null;
                     document.getElementById('invoice-not-found').classList.remove('hidden');
                 } else {
@@ -2524,11 +2528,11 @@
             const qrisActions = document.getElementById('qris-actions');
 
             if (state.paymentSettings.qris_url) {
-                qrisImg.src = state.paymentSettings.qris_url;
+                qrisImg.src = safeHttpUrl(state.paymentSettings.qris_url);
                 qrisImg.classList.remove('hidden');
                 qrisPlaceholder.classList.add('hidden');
                 qrisActions.classList.remove('hidden');
-                document.getElementById('qris-download-link').href = state.paymentSettings.qris_url;
+                document.getElementById('qris-download-link').href = safeHttpUrl(state.paymentSettings.qris_url);
             } else {
                 qrisImg.classList.add('hidden');
                 qrisPlaceholder.classList.remove('hidden');
@@ -2547,7 +2551,7 @@
                             <span class="font-display font-black text-sm sm:text-base text-slate-800 tracking-normal sm:tracking-wide block break-all">${escapeHtml(m.number)}</span>
                             <span class="text-[11px] text-slate-500 font-semibold block truncate">a.n. ${escapeHtml(m.holder)}</span>
                         </div>
-                        <button type="button" onclick="copyText('${escapeHtml(m.number)}', 'Nomor ${escapeHtml(m.label)} disalin!')" class="px-3 sm:px-3.5 py-2 rounded-xl bg-tosca-50 hover:bg-tosca-100 border border-tosca-200 text-tosca-700 text-xs font-extrabold transition flex items-center gap-1.5 shrink-0">
+                        <button type="button" data-copy="${escapeHtml(m.number)}" data-copy-msg="${escapeHtml('Nomor ' + m.label + ' disalin!')}" class="px-3 sm:px-3.5 py-2 rounded-xl bg-tosca-50 hover:bg-tosca-100 border border-tosca-200 text-tosca-700 text-xs font-extrabold transition flex items-center gap-1.5 shrink-0">
                             <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin
                         </button>
                     </div>
@@ -2612,7 +2616,7 @@
             const existingBox = document.getElementById('existing-proof-box');
             if (!isVerified && inv.proof_url) {
                 existingBox.classList.remove('hidden');
-                document.getElementById('existing-proof-thumb').src = inv.proof_url;
+                document.getElementById('existing-proof-thumb').src = safeHttpUrl(inv.proof_url);
                 document.getElementById('existing-proof-time').textContent = `Diunggah pada: ${inv.paid_at || 'Baru saja'}`;
                 document.getElementById('existing-proof-note').textContent = inv.proof_note ? `"${inv.proof_note}"` : '';
                 document.getElementById('proof-file-label').textContent = 'Ganti gambar bukti pembayaran (jika perlu)';
@@ -2719,11 +2723,13 @@
                 if (optionErr) throw optionErr;
 
                 const compressedBlob = await compressImageToBlob(state.selectedProofFile);
-                const filePath = `proofs/${inv.invoice_code}-${Date.now()}.jpg`;
+                // Akhiran acak membuat URL bukti bayar tidak bisa ditebak dari kode tagihan + waktu
+                const randomSuffix = Array.from(crypto.getRandomValues(new Uint8Array(6)), b => b.toString(16).padStart(2, '0')).join('');
+                const filePath = `proofs/${inv.invoice_code}-${Date.now()}-${randomSuffix}.jpg`;
 
                 const { error: uploadErr } = await sb.storage
                     .from(STORAGE_BUCKET)
-                    .upload(filePath, compressedBlob, { contentType: 'image/jpeg', upsert: true });
+                    .upload(filePath, compressedBlob, { contentType: 'image/jpeg', upsert: false });
 
                 if (uploadErr) throw uploadErr;
 
@@ -2805,10 +2811,10 @@
                                 <div class="min-w-0">
                                     <div class="flex items-center gap-2">
                                         <span class="font-display font-black text-base text-lilac-700 tracking-wider">${escapeHtml(inv.invoice_code)}</span>
-                                        <button onclick="copyText('${escapeHtml(inv.invoice_code)}', 'Kode ${escapeHtml(inv.invoice_code)} disalin!')" class="text-slate-400 hover:text-lilac-600" title="Salin Kode">
+                                        <button data-copy="${escapeHtml(inv.invoice_code)}" data-copy-msg="${escapeHtml('Kode ' + inv.invoice_code + ' disalin!')}" class="text-slate-400 hover:text-lilac-600" title="Salin Kode">
                                             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                                         </button>
-                                        <button onclick="copyText('${escapeHtml(shareUrl)}', 'Link langsung tagihan disalin!')" class="text-slate-400 hover:text-tosca-600" title="Salin Link Langsung">
+                                        <button data-copy="${escapeHtml(shareUrl)}" data-copy-msg="Link langsung tagihan disalin!" class="text-slate-400 hover:text-tosca-600" title="Salin Link Langsung">
                                             <i data-lucide="link" class="w-3.5 h-3.5"></i>
                                         </button>
                                     </div>
@@ -2838,7 +2844,7 @@
                                         `)}
                                     </div>
                                     ${inv.proof_url ? `
-                                        <button onclick="openImageLightbox('${escapeHtml(inv.proof_url)}', 'Bukti Bayar — ${escapeHtml(inv.invoice_code)}')" class="px-3 py-1.5 rounded-xl bg-lilac-100 hover:bg-lilac-200 text-lilac-700 text-xs font-extrabold flex items-center gap-1.5 shrink-0">
+                                        <button data-lightbox="${escapeHtml(inv.proof_url)}" data-lightbox-title="${escapeHtml('Bukti Bayar — ' + inv.invoice_code)}" class="px-3 py-1.5 rounded-xl bg-lilac-100 hover:bg-lilac-200 text-lilac-700 text-xs font-extrabold flex items-center gap-1.5 shrink-0">
                                             <i data-lucide="image" class="w-3.5 h-3.5"></i> Bukti Bayar
                                         </button>
                                     ` : '<span class="text-[11px] text-slate-400 italic shrink-0">Belum ada bukti</span>'}
@@ -2885,7 +2891,7 @@
                                 <button onclick="openEditInvoiceModal('${inv.id}')" class="px-2.5 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-bold">
                                     Edit
                                 </button>
-                                <button onclick="openDeleteModal('invoice', '${inv.id}', '${escapeHtml(inv.invoice_code)}')" class="p-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500">
+                                <button data-delete-type="invoice" data-delete-id="${escapeHtml(inv.id)}" data-delete-label="${escapeHtml(inv.invoice_code)}" class="p-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-500">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                 </button>
                             </div>
@@ -3099,7 +3105,10 @@
             const headers = Object.keys(rows[0]);
 
             const escapeCsvCell = (val) => {
-                const str = val === null || val === undefined ? '' : String(val);
+                let str = val === null || val === undefined ? '' : String(val);
+                // Cegah CSV/formula injection: teks yang diawali = + - @ (atau tab/CR) diberi awalan '
+                // supaya Excel tidak menjalankannya sebagai formula. Tanda "-" tunggal (placeholder) dibiarkan.
+                if (typeof val === 'string' && str !== '-' && /^[=+\-@\t\r]/.test(str)) str = "'" + str;
                 if (/[",\r\n;]/.test(str)) {
                     return `"${str.replace(/"/g, '""')}"`;
                 }
@@ -3136,8 +3145,12 @@
         function generateRandomInvoiceCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let code = 'PCQ-';
-            for (let i = 0; i < 4; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            // 8 karakter acak dari crypto (alfabet 32 karakter = 40 bit), format PCQ-XXXX-XXXX
+            const randomValues = new Uint32Array(8);
+            crypto.getRandomValues(randomValues);
+            for (let i = 0; i < 8; i++) {
+                if (i === 4) code += '-';
+                code += chars.charAt(randomValues[i] % chars.length);
             }
             document.getElementById('inv-code-input').value = code;
         }
@@ -3215,7 +3228,7 @@
             if (newStatus === 'Lunas') {
                 const lunasTimestamp = (existingInv && existingInv.status === 'Lunas' && existingInv.lunas_at)
                     ? existingInv.lunas_at
-                    : new Date().toISOString();
+                    : new Date(serverNow()).toISOString();
                 const previewCalc = calculateInvoicePenalty({ ...payload, lunas_at: lunasTimestamp });
                 payload.lunas_at = lunasTimestamp;
                 payload.late_days = previewCalc.lateDays;
@@ -3268,7 +3281,7 @@
             const rawShopee = lunasDeliveryOption === 'ditimbun'
                 ? ''
                 : document.getElementById('lunas-shopee-link-input').value.trim();
-            const nowIso = new Date().toISOString();
+            const nowIso = new Date(serverNow()).toISOString();
 
             const finalCalc = inv
                 ? calculateInvoicePenalty({ ...inv, status: 'Lunas', lunas_at: nowIso })
@@ -3655,6 +3668,53 @@
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
         }
 
+        // ====== KEAMANAN & WAKTU SERVER ======
+        // Hanya izinkan URL http(s) untuk src/href yang berasal dari database.
+        function safeHttpUrl(url) {
+            const raw = String(url || '').trim();
+            if (!raw) return '';
+            try {
+                const u = new URL(raw, window.location.href);
+                return (u.protocol === 'http:' || u.protocol === 'https:') ? u.href : '';
+            } catch (e) {
+                return '';
+            }
+        }
+
+        // Jam server (selisih terhadap jam perangkat), supaya hitungan denda tidak bergantung pada jam HP customer.
+        function serverNow() {
+            return Date.now() + (state.serverOffsetMs || 0);
+        }
+
+        async function syncServerTime() {
+            if (!sb) return;
+            try {
+                const t0 = Date.now();
+                const { data, error } = await sb.rpc('server_now');
+                const t1 = Date.now();
+                if (error || !data) return;
+                const serverMs = new Date(data).getTime();
+                if (Number.isNaN(serverMs)) return;
+                state.serverOffsetMs = serverMs - Math.round((t0 + t1) / 2);
+            } catch (e) {
+                console.warn('Sinkron jam server gagal, memakai jam perangkat.', e);
+            }
+        }
+
+        // Satu handler klik untuk tombol yang membawa data dari database lewat data-attribute,
+        // sehingga tidak ada lagi nilai dari database yang disisipkan ke dalam atribut onclick.
+        document.addEventListener('click', (e) => {
+            const el = e.target.closest('[data-copy], [data-lightbox], [data-delete-type]');
+            if (!el) return;
+            if (el.hasAttribute('data-copy')) {
+                copyText(el.dataset.copy, el.dataset.copyMsg || 'Disalin!');
+            } else if (el.hasAttribute('data-lightbox')) {
+                openImageLightbox(el.dataset.lightbox, el.dataset.lightboxTitle || 'Preview Gambar');
+            } else if (el.hasAttribute('data-delete-type')) {
+                openDeleteModal(el.dataset.deleteType, el.dataset.deleteId, el.dataset.deleteLabel || '');
+            }
+        });
+
         function copyText(text, successMsg = 'Disalin!') {
             navigator.clipboard.writeText(text).then(() => showToast(successMsg));
         }
@@ -3672,7 +3732,7 @@
         }
 
         function openImageLightbox(src, title = 'Preview Gambar') {
-            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-img').src = safeHttpUrl(src);
             document.getElementById('lightbox-title').textContent = title;
             openModal('lightbox-modal');
         }
