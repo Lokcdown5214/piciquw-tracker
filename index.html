@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PICIQUW — Homepage, Batch Tracker & Cek Tagihan</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="Logo Piciquw_2.jpg">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Nunito & Plus Jakarta Sans -->
@@ -73,7 +75,7 @@
         ::-webkit-scrollbar-thumb { background: #D1B0FF; border-radius: 999px; }
         ::-webkit-scrollbar-thumb:hover { background: #9F67EC; }
         .clean-card {
-            background: #FFFFFF;
+            background: rgba(255, 255, 255, 0.94);
             border: 2px solid rgba(229, 209, 255, 0.85);
             box-shadow: 0 12px 32px -8px rgba(159, 103, 236, 0.10), 0 4px 12px -2px rgba(33, 179, 149, 0.06);
         }
@@ -91,11 +93,23 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen w-full flex flex-col selection:bg-lilac-200 selection:text-lilac-700 relative">
 
-    <!-- Decorative Cute Shipping Illustrations & Polka-dot Accents Layer -->
+    <!-- Decorative Background Layer + Center Logo Watermark -->
     <div aria-hidden="true" class="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none">
+        <!-- Soft Pastel Glows -->
         <div class="absolute -top-24 -left-24 w-80 sm:w-96 h-80 sm:h-96 rounded-full bg-lilac-300/25 blur-3xl"></div>
         <div class="absolute top-1/3 -right-24 w-80 sm:w-96 h-80 sm:h-96 rounded-full bg-tosca-300/25 blur-3xl"></div>
         <div class="absolute -bottom-24 left-1/4 w-80 sm:w-96 h-80 sm:h-96 rounded-full bg-lilac-200/30 blur-3xl"></div>
+
+        <!-- Center PICIQUW Logo Watermark -->
+        <div class="absolute inset-0 flex items-center justify-center">
+            <img 
+                src="Logo Piciquw_2.jpg" 
+                alt="" 
+                onerror="handleLogoFallback(this, true)"
+                class="w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] lg:w-[600px] lg:h-[600px] object-cover rounded-full opacity-[0.20] mix-blend-multiply"
+                style="-webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 44%, rgba(0,0,0,0) 72%); mask-image: radial-gradient(circle, rgba(0,0,0,1) 44%, rgba(0,0,0,0) 72%);"
+            >
+        </div>
 
         <svg class="w-16 h-16 sm:w-28 sm:h-28 absolute top-24 sm:top-8 left-2 sm:left-8 opacity-65 animate-float" viewBox="0 0 120 120" fill="none">
             <rect x="20" y="38" width="80" height="64" rx="16" fill="#F3E8FF" stroke="#9F67EC" stroke-width="4"/>
@@ -177,8 +191,13 @@
     <header class="relative z-20 pt-4 sm:pt-5 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto bg-white/95 backdrop-blur-md border-2 border-lilac-100 rounded-3xl sm:rounded-full p-3 sm:px-7 sm:py-3 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
             <button onclick="switchPage('home')" class="flex items-center justify-center sm:justify-start gap-2.5 group">
-                <span class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-lilac-500 to-tosca-400 text-white flex items-center justify-center font-display font-black text-sm sm:text-base shadow-sm group-hover:scale-105 transition">
-                    P
+                <span class="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-lilac-200 bg-gradient-to-br from-lilac-200 to-tosca-200 text-lilac-700 flex items-center justify-center font-display font-black text-sm sm:text-base shadow-sm group-hover:scale-105 transition shrink-0">
+                    <img 
+                        src="Logo Piciquw_2.jpg" 
+                        alt="Logo PICIQUW" 
+                        onerror="handleLogoFallback(this, false)"
+                        class="w-full h-full object-cover scale-[1.55]"
+                    >
                 </span>
                 <span class="font-display font-black text-lg sm:text-xl tracking-wide bg-gradient-to-r from-lilac-600 to-tosca-500 bg-clip-text text-transparent">
                     PICIQUW
@@ -198,7 +217,7 @@
                     <i data-lucide="receipt" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
                     <span>Cek Tagihan</span>
                 </button>
-                <button onclick="jumpToHelpSection()" data-nav="help" class="nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-lilac-50">
+                <button onclick="switchPage('help')" data-nav="help" class="nav-pill justify-center whitespace-nowrap px-2.5 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-bold transition flex items-center gap-1 sm:gap-1.5 text-slate-600 hover:bg-lilac-50">
                     <i data-lucide="help-circle" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0"></i>
                     <span>QnA &amp; Kontak</span>
                 </button>
@@ -209,7 +228,7 @@
     <!-- Main Container -->
     <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 pt-6 sm:pt-8 pb-16 sm:pb-20">
 
-        <!-- ==================== PAGE 1: HOMEPAGE ==================== -->
+        <!-- ==================== PAGE 1: HOMEPAGE (CLEAN WITHOUT QNA) ==================== -->
         <section id="page-home" class="max-w-6xl mx-auto space-y-7 sm:space-y-10">
             <!-- Hero Section -->
             <div class="text-center max-w-2xl mx-auto pt-1 sm:pt-2">
@@ -355,62 +374,6 @@
                         </button>
                     </form>
                 </div>
-            </div>
-
-            <!-- ==================== SECTION: QNA (FAQ) & CONTACT PERSON SOSMED ==================== -->
-            <div id="section-qna-contact" class="pt-2 space-y-6 sm:space-y-8 scroll-mt-24">
-                
-                <!-- 1. QnA (Pertanyaan yang Sering Ditanyakan — Tanpa Tab Semua Topik) -->
-                <div class="clean-card rounded-3xl p-5 sm:p-7 bg-white/95 space-y-4 sm:space-y-5">
-                    <div class="space-y-1">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lilac-100 text-lilac-700 text-[11px] font-extrabold uppercase tracking-wider">
-                            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
-                            <span>Pusat Bantuan Customer</span>
-                        </span>
-                        <h2 class="font-display text-xl sm:text-2xl font-black text-slate-800">
-                            QnA &amp; Panduan Order PICIQUW 💬
-                        </h2>
-                        <p class="text-xs sm:text-sm text-slate-500">
-                            Pilih topik bantuan di bawah ini, lalu klik pertanyaan untuk melihat jawabannya.
-                        </p>
-                    </div>
-
-                    <!-- QnA Category Filter Pills (Tanpa "Semua Topik") -->
-                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                        <button type="button" onclick="setQnaCategory('Batch & Pengiriman')" data-qna-cat="Batch & Pengiriman" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-lilac-500 text-white shadow-xs transition">
-                            📦 Batch &amp; Pengiriman
-                        </button>
-                        <button type="button" onclick="setQnaCategory('Tagihan & Denda')" data-qna-cat="Tagihan & Denda" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-600 hover:bg-tosca-50 border border-slate-200 transition">
-                            💳 Tagihan &amp; Denda
-                        </button>
-                        <button type="button" onclick="setQnaCategory('Shopee & Layanan')" data-qna-cat="Shopee & Layanan" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-600 hover:bg-orange-50 border border-slate-200 transition">
-                            🛍️ Shopee &amp; Layanan
-                        </button>
-                    </div>
-
-                    <!-- QnA Accordion List -->
-                    <div id="qna-accordion-list" class="space-y-2.5"></div>
-                </div>
-
-                <!-- 2. Contact Person & Sosial Media PICIQUW (Compact Size: LINE & X) -->
-                <div class="max-w-3xl mx-auto clean-card rounded-3xl p-4 sm:p-6 bg-gradient-to-br from-white via-lilac-50/40 to-tosca-50/40 space-y-4">
-                    <div class="space-y-0.5">
-                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tosca-100 text-tosca-700 text-[10px] font-extrabold uppercase tracking-wider">
-                            <i data-lucide="headphones" class="w-3 h-3"></i>
-                            <span>Official Channels</span>
-                        </span>
-                        <h2 class="font-display text-lg sm:text-xl font-black text-slate-800">
-                            Contact Person &amp; Sosial Media PICIQUW 📱
-                        </h2>
-                        <p class="text-xs text-slate-500">
-                            Hubungi akun resmi kami untuk konfirmasi kendala tagihan atau pantau update PO terbaru.
-                        </p>
-                    </div>
-
-                    <!-- Social Media & CP Cards Grid (Compact 2 Columns: LINE & X) -->
-                    <div id="social-contacts-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 items-stretch"></div>
-                </div>
-
             </div>
         </section>
 
@@ -971,6 +934,81 @@
             </div>
         </section>
 
+        <!-- ==================== PAGE 4: QNA & CONTACT PERSON (HALAMAN KHUSUS) ==================== -->
+        <section id="page-help" class="hidden max-w-5xl mx-auto space-y-6 sm:space-y-8">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-white border-2 border-lilac-200 text-[11px] sm:text-xs font-extrabold text-lilac-700 mb-3.5 sm:mb-4 shadow-sm tracking-wide max-w-full">
+                    <i data-lucide="help-circle" class="w-3.5 h-3.5 text-lilac-500 shrink-0"></i>
+                    <span class="truncate">PUSAT BANTUAN &amp; KONTAK RESMI</span>
+                </div>
+                <h1 class="font-display text-3xl sm:text-5xl font-black tracking-wide bg-gradient-to-r from-lilac-600 via-purple-500 to-tosca-500 bg-clip-text text-transparent pb-1 sm:pb-2">
+                    QnA &amp; Kontak PICIQUW
+                </h1>
+                <p class="text-slate-600 text-sm sm:text-base mt-1 font-medium leading-relaxed px-1">
+                    Temukan jawaban seputar pengiriman batch, denda keterlambatan, dan checkout Shopee, atau hubungi kanal resmi kami 💬✨
+                </p>
+            </div>
+
+            <!-- 1. QnA (Pertanyaan yang Sering Ditanyakan) -->
+            <div class="clean-card rounded-3xl p-5 sm:p-8 bg-white/95 space-y-4 sm:space-y-5">
+                <div class="space-y-1">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lilac-100 text-lilac-700 text-[11px] font-extrabold uppercase tracking-wider">
+                        <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                        <span>Panduan Order</span>
+                    </span>
+                    <h2 class="font-display text-xl sm:text-2xl font-black text-slate-800">
+                        Pertanyaan yang Sering Ditanyakan (QnA) 💬
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500">
+                        Pilih kategori topik di bawah ini, lalu klik pertanyaan untuk membuka jawabannya.
+                    </p>
+                </div>
+
+                <!-- QnA Category Filter Pills -->
+                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <button type="button" onclick="setQnaCategory('Batch & Pengiriman')" data-qna-cat="Batch & Pengiriman" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-lilac-500 text-white shadow-xs transition">
+                        📦 Batch &amp; Pengiriman
+                    </button>
+                    <button type="button" onclick="setQnaCategory('Tagihan & Denda')" data-qna-cat="Tagihan & Denda" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-600 hover:bg-tosca-50 border border-slate-200 transition">
+                        💳 Tagihan &amp; Denda
+                    </button>
+                    <button type="button" onclick="setQnaCategory('Shopee & Layanan')" data-qna-cat="Shopee & Layanan" class="qna-cat-pill px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-50 text-slate-600 hover:bg-orange-50 border border-slate-200 transition">
+                        🛍️ Shopee &amp; Layanan
+                    </button>
+                </div>
+
+                <!-- QnA Accordion List -->
+                <div id="qna-accordion-list" class="space-y-2.5"></div>
+            </div>
+
+            <!-- 2. Contact Person & Sosial Media PICIQUW (LINE & X) -->
+            <div class="max-w-3xl mx-auto clean-card rounded-3xl p-5 sm:p-6 bg-gradient-to-br from-white via-lilac-50/40 to-tosca-50/40 space-y-4">
+                <div class="space-y-0.5">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tosca-100 text-tosca-700 text-[10px] font-extrabold uppercase tracking-wider">
+                        <i data-lucide="headphones" class="w-3 h-3"></i>
+                        <span>Official Channels</span>
+                    </span>
+                    <h2 class="font-display text-lg sm:text-xl font-black text-slate-800">
+                        Contact Person &amp; Sosial Media PICIQUW 📱
+                    </h2>
+                    <p class="text-xs text-slate-500">
+                        Hubungi akun resmi kami untuk konfirmasi kendala tagihan atau pantau update PO terbaru.
+                    </p>
+                </div>
+
+                <!-- Social Media & CP Cards Grid -->
+                <div id="social-contacts-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 items-stretch"></div>
+            </div>
+
+            <!-- Back to Home Button -->
+            <div class="text-center pt-1">
+                <button type="button" onclick="switchPage('home')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-lilac-50 border-2 border-lilac-200 text-lilac-700 text-xs sm:text-sm font-extrabold shadow-xs transition">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>Kembali ke Beranda</span>
+                </button>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
@@ -1494,16 +1532,32 @@
 
     <!-- App & Supabase Logic -->
     <script>
-        // ====== KONFIGURASI SUPABASE PICIQUW ======
+        // ====== KONFIGURASI SUPABASE & ADMIN PICIQUW ======
         const SUPABASE_URL = "https://cwpyhgasbmauesacdiag.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_ouDVGuaX-Ogc8zFBPXryhA_CoBNWK46";
         const STORAGE_BUCKET = "piciquw-uploads";
+        const ADMIN_EMAIL = "jcehyungf@gmail.com";
 
         // Konfigurasi Denda Keterlambatan
         const GRACE_PERIOD_DAYS = 3;
         const LATE_FEE_PER_DAY = 2000;
         const DAY_IN_MS = 24 * 60 * 60 * 1000;
-        // =========================================
+        // ==================================================
+
+        // Smart Fallback untuk File Logo Lokal / GitHub
+        function handleLogoFallback(imgEl, isWatermark = false) {
+            const step = Number(imgEl.dataset.fallbackStep || 0);
+            const candidates = ['Logo Piciquw.jpg', 'logo-piciquw.jpg', 'logo-piciquw.png', 'logo.png'];
+            if (step < candidates.length) {
+                imgEl.dataset.fallbackStep = String(step + 1);
+                imgEl.src = candidates[step];
+            } else {
+                imgEl.style.display = 'none';
+                if (!isWatermark && imgEl.parentElement) {
+                    imgEl.parentElement.textContent = 'P';
+                }
+            }
+        }
 
         // ====== KONFIGURASI CONTACT PERSON & SOSMED PICIQUW (LINE & X SAJA) ======
         const PICIQUW_SOCIALS = [
@@ -1605,6 +1659,10 @@
         let sb = null;
         let countdownInterval = null;
 
+        function isAuthorizedAdmin(user) {
+            return Boolean(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+        }
+
         async function initApp() {
             document.getElementById('year').textContent = new Date().getFullYear();
             renderQnaSection();
@@ -1614,10 +1672,10 @@
             sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             const { data: { session } } = await sb.auth.getSession();
-            state.user = session?.user || null;
+            state.user = isAuthorizedAdmin(session?.user) ? session.user : null;
 
             sb.auth.onAuthStateChange((_event, session) => {
-                state.user = session?.user || null;
+                state.user = isAuthorizedAdmin(session?.user) ? session.user : null;
                 renderAll();
             });
 
@@ -1633,10 +1691,10 @@
                 switchPage('billing');
                 document.getElementById('customer-invoice-code').value = kodeParam.toUpperCase();
                 await lookupInvoiceByCode(kodeParam.toUpperCase());
-            } else if (pageParam === 'tracker' || pageParam === 'billing') {
+            } else if (pageParam === 'tracker' || pageParam === 'billing' || pageParam === 'help') {
                 switchPage(pageParam);
-            } else if (pageParam === 'help' || pageParam === 'qna') {
-                jumpToHelpSection();
+            } else if (pageParam === 'qna') {
+                switchPage('help');
             } else {
                 switchPage('home');
             }
@@ -1675,10 +1733,20 @@
                 }
 
                 if (state.activeCustomerInvoice) {
-                    const fresh = await sb.from('invoices').select('*').eq('invoice_code', state.activeCustomerInvoice.invoice_code).maybeSingle();
-                    if (fresh.data) {
-                        state.activeCustomerInvoice = fresh.data;
-                        renderCustomerInvoiceResult();
+                    const codeToRefresh = state.activeCustomerInvoice.invoice_code;
+                    if (state.user) {
+                        const fresh = await sb.from('invoices').select('*').eq('invoice_code', codeToRefresh).maybeSingle();
+                        if (fresh.data) {
+                            state.activeCustomerInvoice = fresh.data;
+                            renderCustomerInvoiceResult();
+                        }
+                    } else {
+                        const { data: rpcData } = await sb.rpc('get_customer_invoice', { p_code: codeToRefresh });
+                        const freshRow = Array.isArray(rpcData) ? rpcData[0] : rpcData;
+                        if (freshRow) {
+                            state.activeCustomerInvoice = freshRow;
+                            renderCustomerInvoiceResult();
+                        }
                     }
                 }
             } catch (err) {
@@ -1811,17 +1879,6 @@
             }
         }
 
-        function jumpToHelpSection() {
-            switchPage('home', false);
-            setActiveNavPill('help');
-            setTimeout(() => {
-                const target = document.getElementById('section-qna-contact');
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 60);
-        }
-
         // ==================== LIVE COUNTDOWN & PENALTY ENGINE ====================
         function getRemainingParts(deadlineMs, nowMs = Date.now()) {
             const diff = Math.max(0, deadlineMs - nowMs);
@@ -1937,6 +1994,7 @@
             document.getElementById('page-home').classList.toggle('hidden', page !== 'home');
             document.getElementById('page-tracker').classList.toggle('hidden', page !== 'tracker');
             document.getElementById('page-billing').classList.toggle('hidden', page !== 'billing');
+            document.getElementById('page-help').classList.toggle('hidden', page !== 'help');
 
             setActiveNavPill(page);
 
@@ -1997,7 +2055,7 @@
                         class="relative group p-4 sm:p-6 rounded-3xl text-left transition-all duration-200 border-2 ${
                             isSelected 
                             ? 'bg-gradient-to-br from-lilac-500 to-tosca-500 text-white border-transparent shadow-lg shadow-lilac-200/90 -translate-y-0.5' 
-                            : 'bg-white hover:bg-lilac-50/50 text-slate-800 border-lilac-100 hover:border-lilac-300 shadow-sm'
+                            : 'bg-white/95 hover:bg-lilac-50/50 text-slate-800 border-lilac-100 hover:border-lilac-300 shadow-sm'
                         }"
                     >
                         <div class="flex items-center justify-between gap-1.5 mb-2">
@@ -2225,7 +2283,7 @@
             });
         }
 
-        // ==================== CUSTOMER BILLING & PAYMENT LOGIC ====================
+        // ==================== CUSTOMER BILLING & PAYMENT LOGIC (RPC SECURED) ====================
         function handleQuickInvoiceSearch(e) {
             e.preventDefault();
             const code = document.getElementById('home-invoice-input').value.trim().toUpperCase();
@@ -2252,17 +2310,14 @@
             document.getElementById('customer-invoice-result').classList.add('hidden');
 
             try {
-                const { data, error } = await sb
-                    .from('invoices')
-                    .select('*')
-                    .ilike('invoice_code', code)
-                    .maybeSingle();
+                const { data, error } = await sb.rpc('get_customer_invoice', { p_code: code });
+                const invoiceRow = Array.isArray(data) ? data[0] : data;
 
-                if (error || !data) {
+                if (error || !invoiceRow) {
                     state.activeCustomerInvoice = null;
                     document.getElementById('invoice-not-found').classList.remove('hidden');
                 } else {
-                    state.activeCustomerInvoice = data;
+                    state.activeCustomerInvoice = invoiceRow;
                     renderCustomerInvoiceResult();
                 }
             } catch (err) {
@@ -2522,24 +2577,21 @@
                 const senderNote = document.getElementById('proof-sender-note').value.trim();
                 const paidAt = getFormattedTimestamp();
 
-                const { error: updateErr } = await sb
-                    .from('invoices')
-                    .update({
-                        proof_url: publicUrl,
-                        proof_note: senderNote,
-                        paid_at: paidAt,
-                        status: 'Menunggu Verifikasi'
-                    })
-                    .eq('id', inv.id);
+                const { error: rpcErr } = await sb.rpc('submit_customer_payment_proof', {
+                    p_code: inv.invoice_code,
+                    p_proof_url: publicUrl,
+                    p_proof_note: senderNote,
+                    p_paid_at: paidAt
+                });
 
-                if (updateErr) throw updateErr;
+                if (rpcErr) throw rpcErr;
 
                 showToast('Bukti pembayaran berhasil dikirim! Menunggu konfirmasi admin.');
                 await lookupInvoiceByCode(inv.invoice_code);
                 if (state.user) await fetchAllData();
             } catch (err) {
                 console.error('Upload proof error:', err);
-                showToast('Gagal mengunggah bukti. Pastikan bucket Storage sudah dibuat.', 'error');
+                showToast(err?.message || 'Gagal mengunggah bukti pembayaran.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i><span>Kirim Bukti Pembayaran</span>';
@@ -3195,12 +3247,15 @@
             btn.textContent = 'Memeriksa...';
             errBox.classList.add('hidden');
 
-            const { error } = await sb.auth.signInWithPassword({ email, password });
+            const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
             btn.disabled = false;
             btn.textContent = 'Masuk ke Admin Mode';
 
-            if (error) {
+            if (error || !isAuthorizedAdmin(data?.user)) {
+                if (data?.user && !isAuthorizedAdmin(data.user)) {
+                    await sb.auth.signOut();
+                }
                 errBox.textContent = 'Email atau password salah!';
                 errBox.classList.remove('hidden');
             } else {
